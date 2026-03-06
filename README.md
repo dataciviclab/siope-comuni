@@ -56,6 +56,11 @@ Il `mart` labeled espone almeno:
 - `descrizione_codice`
 - `is_titolo_9`
 
+## Documenti utili
+
+- [docs/uso_mart_labeled.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/uso_mart_labeled.md)
+- [docs/output_v1_entrate_comuni_2023_2024.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/output_v1_entrate_comuni_2023_2024.md)
+
 ## Limiti noti
 
 - per confronti descrittivi sui totali, usare come base `is_titolo_9 = false`
