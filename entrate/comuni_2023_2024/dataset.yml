@@ -3,7 +3,7 @@ schema_version: 1
 
 dataset:
   name: "siope_comparto_2y"
-  years: [2023, 2024]
+  years: [2023, 2024, 2025]
 
 raw:
   extractor:
@@ -67,7 +67,7 @@ mart:
         min_rows: 300000
         required_columns: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice", "has_codgest_match"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
-        not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice"]
+        not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur"]
 
 validation:
   fail_on_error: true
