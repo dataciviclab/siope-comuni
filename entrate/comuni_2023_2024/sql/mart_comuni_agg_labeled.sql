@@ -73,7 +73,7 @@ select
     end as is_titolo_9,
     case
         when c.codice_voce like '1.01.%' then 'Imposte proprie'
-        when c.codice_voce = '1.03.01.01.001' then 'Fondi perequativi'
+        when c.codice_voce like '1.03.%' then 'Fondi perequativi'
         when c.codice_voce like '2.01.%' then 'Trasferimenti correnti'
         when c.codice_voce like '4.02.%' then 'Contributi agli investimenti'
         else 'Altro'

@@ -39,13 +39,13 @@ Il dataset principale espone:
 ## Classificazione minima per letture pubbliche
 
 Nel `mart` labeled esiste anche una `macro_categoria_v2` pensata per evitare due
-ambiguita' emerse nei follow-up pubblici:
+ambiguità emerse nei follow-up pubblici:
 
 - non confondere i `Fondi perequativi` con le `Imposte proprie`
 - non leggere i `Contributi agli investimenti` come se fossero semplici
   `Trasferimenti correnti`
 
-La proxy v1 usa regole volutamente semplici sui codici voce:
+La proxy v2 usa regole volutamente semplici sui codici voce:
 
 - `1.01.*` -> `Imposte proprie`
 - `1.03.01.01.001` -> `Fondi perequativi`
@@ -54,5 +54,5 @@ La proxy v1 usa regole volutamente semplici sui codici voce:
 - tutto il resto -> `Altro`
 
 Questa classificazione non sostituisce la lettura puntuale delle singole
-`descrizione_codice`, ma rende piu' stabili confronti pubblici come autonomia
+`descrizione_codice`, ma rende più stabili confronti pubblici come autonomia
 fiscale vs dipendenza esterna nei follow-up `D2`, `D3` e `D4`.

@@ -48,6 +48,9 @@ Questa assunzione e' valida per la v1 e va rivalutata se il progetto si estende 
 - `codice_col6`, `codice_col7`, `codice_col8` non sono campi interpretativi pubblici
 - `macro_categoria_v2` e' una proxy minima: utile per follow-up pubblici, ma non
   sostituisce l'analisi puntuale di tutte le voci `2.*`, `4.*` o `7.*`
+- la categoria `Altro` resta eterogenea e include anche proventi da servizi,
+  anticipazioni e altre voci di finanziamento che vanno lette a livello di
+  `codice_voce` quando il confronto pubblico lo richiede
 
 ## Query di partenza
 
