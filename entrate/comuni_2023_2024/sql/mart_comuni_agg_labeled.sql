@@ -71,6 +71,13 @@ select
         when c.codice_voce like '9.%' then true
         else false
     end as is_titolo_9,
+    case
+        when c.codice_voce like '1.01.%' then 'Imposte proprie'
+        when c.codice_voce = '1.03.01.01.001' then 'Fondi perequativi'
+        when c.codice_voce like '2.01.%' then 'Trasferimenti correnti'
+        when c.codice_voce like '4.02.%' then 'Contributi agli investimenti'
+        else 'Altro'
+    end as macro_categoria_v2,
     g.descrizione_codice,
     g.data_inizio as codgest_data_inizio,
     g.data_fine as codgest_data_fine,

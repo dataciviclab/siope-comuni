@@ -12,6 +12,7 @@ Questa nota spiega come leggere in modo corretto il `mart` finale del progetto:
 - `anno`
 - `codice_voce`
 - `descrizione_codice`
+- `macro_categoria_v2`
 - `importo_totale`
 - `importo_totale_eur`
 - `is_titolo_9`
@@ -22,6 +23,8 @@ Questa nota spiega come leggere in modo corretto il `mart` finale del progetto:
 - usare `importo_totale` solo per controlli tecnici o confronti con i valori raw
 - per confronti sui totali tra comuni, partire da `is_titolo_9 = false`
 - trattare `is_titolo_9 = true` come flussi tecnici o di giro, non come entrate strutturali
+- per confronti su autonomia fiscale o dipendenza esterna, partire da `macro_categoria_v2`
+  e poi scendere alle singole `descrizione_codice` solo nei casi che restano dubbi
 
 ## Join contestuale del dizionario entrate
 
@@ -43,6 +46,8 @@ Questa assunzione e' valida per la v1 e va rivalutata se il progetto si estende 
 - alcuni path anagrafici sono ancora hardcodati allo snapshot `2024`
 - il join anagrafico usa una validita' annuale con pivot al `31 dicembre`
 - `codice_col6`, `codice_col7`, `codice_col8` non sono campi interpretativi pubblici
+- `macro_categoria_v2` e' una proxy minima: utile per follow-up pubblici, ma non
+  sostituisce l'analisi puntuale di tutte le voci `2.*`, `4.*` o `7.*`
 
 ## Query di partenza
 
