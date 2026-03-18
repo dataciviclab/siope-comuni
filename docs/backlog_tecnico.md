@@ -1,14 +1,5 @@
 # Backlog tecnico
 
-## F2 - Path anagrafici hardcodati a 2024
-
-I `mart` leggono ancora i seed anagrafici tramite path `read_parquet(...)` fissati allo snapshot `2024`.
-
-Effetto:
-
-- il progetto funziona sulla baseline attuale
-- un refresh futuro delle anagrafiche richiedera' aggiornamento esplicito dei path
-
 ## F5 - Validita' temporale con pivot al 31 dicembre
 
 I join anagrafici usano:

@@ -1,14 +1,35 @@
-with anag_enti as (
-    select *
-    from read_parquet('out/data/clean/siope_anag_enti_seed/2024/siope_anag_enti_seed_2024_clean.parquet')
+with anag_enti_seed as (
+    select
+        *,
+        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
+    from read_parquet('out/data/clean/siope_anag_enti_seed/*/*.parquet', filename = true)
+),
+anag_enti as (
+    select * exclude (filename, snapshot_year)
+    from anag_enti_seed
+    where snapshot_year = (select max(snapshot_year) from anag_enti_seed)
+),
+sottocomparti_seed as (
+    select
+        *,
+        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
+    from read_parquet('out/data/clean/siope_anag_sottocomparti_seed/*/*.parquet', filename = true)
 ),
 sottocomparti_map as (
-    select *
-    from read_parquet('out/data/clean/siope_anag_sottocomparti_seed/2024/siope_anag_sottocomparti_seed_2024_clean.parquet')
+    select * exclude (filename, snapshot_year)
+    from sottocomparti_seed
+    where snapshot_year = (select max(snapshot_year) from sottocomparti_seed)
+),
+comparti_seed as (
+    select
+        *,
+        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
+    from read_parquet('out/data/clean/siope_anag_comparti_seed/*/*.parquet', filename = true)
 ),
 comparti_map as (
-    select *
-    from read_parquet('out/data/clean/siope_anag_comparti_seed/2024/siope_anag_comparti_seed_2024_clean.parquet')
+    select * exclude (filename, snapshot_year)
+    from comparti_seed
+    where snapshot_year = (select max(snapshot_year) from comparti_seed)
 ),
 base as (
     select
