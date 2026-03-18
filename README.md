@@ -64,6 +64,8 @@ Il `mart` labeled espone almeno:
 - [docs/uso_mart_labeled.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/uso_mart_labeled.md)
 - [docs/output_v1_entrate_comuni_2023_2024.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/output_v1_entrate_comuni_2023_2024.md)
   Documento storico del primo output pubblico stretto su `2023-2024`.
+- [entrate/comuni_2023_2024/notebooks/d3_entrate_comuni_2021_2025.ipynb](entrate/comuni_2023_2024/notebooks/d3_entrate_comuni_2021_2025.ipynb)
+  Follow-up interno sul perimetro `2021-2025`: segnali `2024 -> 2025` e breakdown di `Altro`.
 
 ## Limiti noti
 
