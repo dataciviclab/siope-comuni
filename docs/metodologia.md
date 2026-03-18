@@ -17,7 +17,8 @@ La pipeline segue il contract del `toolkit`:
 
 ## Regole metodologiche iniziali
 
-- il focus v1 e' solo su `comuni / entrate / 2023-2024`
+- il perimetro tecnico attuale e' `comuni / entrate / 2021-2025`
+- il primo output pubblico storico resta invece volutamente stretto su `2023-2024`
 - il terzo campo delle entrate viene trattato come `periodo` (`01..12`), non come `codice_gestione`
 - il join contestuale del labeled usa `codice_comparto = codice_gestione` sul perimetro comuni
 - i confronti descrittivi sui totali devono partire da `is_titolo_9 = false`
@@ -27,7 +28,7 @@ La pipeline segue il contract del `toolkit`:
 - `importo`: centesimi di euro
 - `importo_totale_eur`: euro derivati dal totale aggregato
 
-## Output v1
+## Output disponibili
 
 Il dataset principale espone:
 
@@ -35,6 +36,7 @@ Il dataset principale espone:
 - `mart` comuni di dettaglio
 - `mart` comuni aggregato per `ente-anno-codice_voce`
 - `mart` comuni aggregato labeled con descrizioni voce
+- `cross_year` labeled multi-anno costruito sui parquet annuali del mart
 
 ## Classificazione minima per letture pubbliche
 

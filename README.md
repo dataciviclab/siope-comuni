@@ -1,21 +1,22 @@
 # siope-comuni
 
-Repo progetto DataCivicLab dedicata a SIOPE, con focus iniziale su `entrate / comuni / 2023-2024`.
+Repo progetto DataCivicLab dedicata a SIOPE, con base tecnica attuale su `entrate / comuni / 2021-2025`.
 
 ## Stato
 
-Repo privata in consolidamento. La v1 e' volutamente stretta:
+Repo privata in consolidamento. Il perimetro tecnico oggi e':
 
 - perimetro: comuni
 - lato contabile: entrate
-- annualita': 2023, 2024
+- annualita': 2021-2025
 - pipeline: `RAW -> CLEAN -> MART` via `toolkit`
+- cross-year disponibile sul `mart` labeled multi-anno
 
-`uscite` resta fuori dalla v1.
+`uscite` resta ancora fuori dal perimetro implementato.
 
 ## Struttura
 
-- `entrate/comuni_2023_2024/`: dataset principale
+- `entrate/comuni_2023_2024/`: dataset principale entrate comuni
 - `anagrafica/anag-enti/`: seed anagrafica enti
 - `anagrafica/anag-codgest-entrate/`: seed dizionario voci entrate
 - `anagrafica/anag-comparti/`: seed comparti
@@ -38,6 +39,7 @@ Poi eseguire il dataset principale:
 ```powershell
 py -m toolkit.cli.app run all --config entrate/comuni_2023_2024/dataset.yml
 py -m toolkit.cli.app validate all --config entrate/comuni_2023_2024/dataset.yml
+py -m toolkit.cli.app run cross_year --config entrate/comuni_2023_2024/dataset.yml
 ```
 
 ## Output attesi
@@ -48,6 +50,7 @@ Il dataset principale produce:
 - `siope_entrate_comuni`
 - `siope_entrate_comuni_agg`
 - `siope_entrate_comuni_agg_labeled`
+- `siope_entrate_comuni_agg_labeled_multi_anno`
 
 Il `mart` labeled espone almeno:
 
@@ -60,6 +63,7 @@ Il `mart` labeled espone almeno:
 
 - [docs/uso_mart_labeled.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/uso_mart_labeled.md)
 - [docs/output_v1_entrate_comuni_2023_2024.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/output_v1_entrate_comuni_2023_2024.md)
+  Documento storico del primo output pubblico stretto su `2023-2024`.
 
 ## Limiti noti
 
