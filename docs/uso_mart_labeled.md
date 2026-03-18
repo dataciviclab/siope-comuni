@@ -38,11 +38,12 @@ Nel perimetro v1 dei comuni, il contesto corretto e':
 - `tipo_ente = COMUNE`
 - `codice_comparto = PRO`
 
-Questa assunzione e' valida per la v1 e va rivalutata se il progetto si estende ad altri comparti.
+Questa assunzione e' valida per il perimetro attuale dei comuni e va rivalutata se il progetto si estende ad altri comparti.
 
 ## Limiti da tenere presenti
 
-- perimetro v1: `comuni / entrate / 2023-2024`
+- perimetro tecnico attuale: `comuni / entrate / 2021-2025`
+- il primo output pubblico storico del repo resta invece su `2023-2024`
 - alcuni path anagrafici sono ancora hardcodati allo snapshot `2024`
 - il join anagrafico usa una validita' annuale con pivot al `31 dicembre`
 - `codice_col6`, `codice_col7`, `codice_col8` non sono campi interpretativi pubblici
