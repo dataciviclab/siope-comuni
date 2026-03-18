@@ -44,7 +44,7 @@ Questa assunzione e' valida per il perimetro attuale dei comuni e va rivalutata 
 
 - perimetro tecnico attuale: `comuni / entrate / 2021-2025`
 - il primo output pubblico storico del repo resta invece su `2023-2024`
-- alcuni path anagrafici sono ancora hardcodati allo snapshot `2024`
+- i `mart` leggono sempre l'ultimo snapshot disponibile dei seed anagrafici `clean`
 - il join anagrafico usa una validita' annuale con pivot al `31 dicembre`
 - `codice_col6`, `codice_col7`, `codice_col8` non sono campi interpretativi pubblici
 - `macro_categoria_v2` e' una proxy minima: utile per follow-up pubblici, ma non
