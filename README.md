@@ -78,6 +78,8 @@ Il `mart` labeled espone almeno:
   Documento storico del primo output pubblico stretto su `2023-2024`.
 - [entrate/comuni/notebooks/d3_entrate_comuni_2021_2025.ipynb](entrate/comuni/notebooks/d3_entrate_comuni_2021_2025.ipynb)
   Follow-up interno sul perimetro `2021-2025`: segnali `2024 -> 2025` e breakdown di `Altro`.
+- [uscite/comuni/notebooks/d1_uscite_grandi_comuni_2021_2025.ipynb](uscite/comuni/notebooks/d1_uscite_grandi_comuni_2021_2025.ipynb)
+  Primo notebook interno sul lato `uscite`: grandi comuni, `2021 -> 2025`, spesa corrente, investimenti e flussi tecnici.
 
 ## Limiti noti
 
