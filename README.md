@@ -10,7 +10,7 @@ Repo privata in consolidamento. Il perimetro tecnico oggi e':
 - lato contabile: entrate + uscite
 - annualita': 2021-2025
 - pipeline: `RAW -> CLEAN -> MART` via `toolkit`
-- cross-year disponibile oggi solo per `entrate`
+- cross-year disponibile su `entrate` e `uscite`
 
 ## Struttura
 
@@ -43,6 +43,7 @@ py -m toolkit.cli.app validate all --config entrate/comuni/dataset.yml
 py -m toolkit.cli.app run cross_year --config entrate/comuni/dataset.yml
 py -m toolkit.cli.app run all --config uscite/comuni/dataset.yml
 py -m toolkit.cli.app validate all --config uscite/comuni/dataset.yml
+py -m toolkit.cli.app run cross_year --config uscite/comuni/dataset.yml
 ```
 
 ## Output attesi
@@ -68,6 +69,7 @@ Il `mart` labeled espone almeno:
 - `siope_uscite_comuni`
 - `siope_uscite_comuni_agg`
 - `siope_uscite_comuni_agg_labeled`
+- `siope_uscite_comuni_agg_labeled_multi_anno`
 
 ## Documenti utili
 
