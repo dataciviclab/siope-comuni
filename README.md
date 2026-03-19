@@ -4,7 +4,7 @@ Repo progetto DataCivicLab dedicata a SIOPE, con base tecnica attuale su `comuni
 
 ## Stato
 
-Repo privata in consolidamento. Il perimetro tecnico oggi e':
+Il perimetro tecnico oggi e':
 
 - perimetro: comuni
 - lato contabile: entrate + uscite
@@ -77,14 +77,14 @@ Il `mart` labeled espone almeno:
 - [docs/output_v1_entrate_comuni_2023_2024.md](docs/output_v1_entrate_comuni_2023_2024.md)
   Documento storico del primo output pubblico stretto su `2023-2024`.
 - [entrate/comuni/notebooks/d3_entrate_comuni_2021_2025.ipynb](entrate/comuni/notebooks/d3_entrate_comuni_2021_2025.ipynb)
-  Follow-up interno sul perimetro `2021-2025`: segnali `2024 -> 2025` e breakdown di `Altro`.
+  Notebook di follow-up sul perimetro `2021-2025`: segnali `2024 -> 2025` e breakdown di `Altro`.
 - [uscite/comuni/notebooks/d1_uscite_grandi_comuni_2021_2025.ipynb](uscite/comuni/notebooks/d1_uscite_grandi_comuni_2021_2025.ipynb)
-  Primo notebook interno sul lato `uscite`: grandi comuni, `2021 -> 2025`, spesa corrente, investimenti e flussi tecnici.
+  Primo notebook sul lato `uscite`: grandi comuni, `2021 -> 2025`, spesa corrente, investimenti e flussi tecnici.
 
 ## Limiti noti
 
 - per confronti descrittivi sui totali, usare come base `is_titolo_9 = false`
 - gli importi originari sono in centesimi di euro
-- alcuni riferimenti anagrafici sono ancora hardcodati allo snapshot `2024`
+- il lato `entrate` e' oggi piu' maturo del lato `uscite` sul piano analitico e documentale
 
-Dettagli in [docs/metodologia.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/metodologia.md) e [docs/backlog_tecnico.md](/C:/Users/gabry/OneDrive/Desktop/dataciviclab-workspace/siope-comuni/docs/backlog_tecnico.md).
+Dettagli in [docs/metodologia.md](docs/metodologia.md) e [docs/backlog_tecnico.md](docs/backlog_tecnico.md).
