@@ -71,3 +71,10 @@ mart:
 
 validation:
   fail_on_error: true
+
+cross_year:
+  tables:
+    - name: "siope_uscite_comuni_agg_labeled_multi_anno"
+      sql: "sql/cross/siope_uscite_comuni_agg_labeled_multi_anno.sql"
+      source_layer: "mart"
+      source_table: "siope_uscite_comuni_agg_labeled"
