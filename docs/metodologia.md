@@ -19,7 +19,7 @@ La pipeline segue il contract del `toolkit`:
 ## Regole metodologiche iniziali
 
 - il perimetro tecnico attuale e' `comuni / 2021-2025`
-- `entrate` e' il lato piu maturo, con `cross_year` e notebook interni
+- `entrate` e' il lato piu maturo, con `cross_year` e notebook gia' consolidati
 - `uscite` espone ora anche un `cross_year` labeled multi-anno, ma non ha ancora notebook dedicati
 - il primo output pubblico storico resta invece volutamente stretto su `2023-2024`
 - il terzo campo delle entrate viene trattato come `periodo` (`01..12`), non come `codice_gestione`
