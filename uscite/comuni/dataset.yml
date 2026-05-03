@@ -72,6 +72,20 @@ mart:
 validation:
   fail_on_error: true
 
+support:
+  - name: "comparti"
+    config: "../../anagrafica/anag-comparti/dataset.yml"
+    years: [2024]
+  - name: "sottocomparti"
+    config: "../../anagrafica/anag-sottocomparti/dataset.yml"
+    years: [2024]
+  - name: "enti"
+    config: "../../anagrafica/anag-enti/dataset.yml"
+    years: [2024]
+  - name: "codgest_uscite"
+    config: "../../anagrafica/anag-codgest-uscite/dataset.yml"
+    years: [2024]
+
 cross_year:
   tables:
     - name: "siope_uscite_comuni_agg_labeled_multi_anno"

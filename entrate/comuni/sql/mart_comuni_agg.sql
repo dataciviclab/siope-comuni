@@ -2,7 +2,7 @@ with anag_enti_seed as (
     select
         *,
         regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('out/data/clean/siope_anag_enti_seed/*/*.parquet', filename = true)
+    from read_parquet('{support.enti.mart}', filename = true)
 ),
 anag_enti as (
     select * exclude (filename, snapshot_year)
@@ -13,7 +13,7 @@ sottocomparti_seed as (
     select
         *,
         regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('out/data/clean/siope_anag_sottocomparti_seed/*/*.parquet', filename = true)
+    from read_parquet('{support.sottocomparti.mart}', filename = true)
 ),
 sottocomparti_map as (
     select * exclude (filename, snapshot_year)
@@ -24,7 +24,7 @@ comparti_seed as (
     select
         *,
         regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('out/data/clean/siope_anag_comparti_seed/*/*.parquet', filename = true)
+    from read_parquet('{support.comparti.mart}', filename = true)
 ),
 comparti_map as (
     select * exclude (filename, snapshot_year)
