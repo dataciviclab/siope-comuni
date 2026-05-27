@@ -33,12 +33,19 @@ jobs:
           pip install git+https://github.com/dataciviclab/toolkit.git
 
       - name: Seeds anagrafici
-        run: make seeds
+        run: |
+          if ${{ inputs.smoke }}; then
+            for d in anagrafica/anag-comparti anagrafica/anag-sottocomparti anagrafica/anag-enti anagrafica/anag-codgest-entrate anagrafica/anag-codgest-uscite anagrafica/anag-reg-prov anagrafica/anag-comuni; do
+              python3 -m toolkit.cli.app run all --config $d/dataset.yml --sample-rows 1000
+            done
+          else
+            make seeds
+          fi
 
       - name: Run entrate
         if: inputs.sides != 'uscite'
         run: |
-          FLAG="${{ inputs.smoke == 'true' && '--sample-rows 1000' || '' }}"
+          FLAG="${{ inputs.smoke && '--sample-rows 1000' || '' }}"
           if [ "${{ inputs.years }}" = "all" ]; then YEARS="2021 2022 2023 2024 2025"
           else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for y in $YEARS; do
@@ -49,7 +56,7 @@ jobs:
       - name: Run uscite
         if: inputs.sides != 'entrate'
         run: |
-          FLAG="${{ inputs.smoke == 'true' && '--sample-rows 1000' || '' }}"
+          FLAG="${{ inputs.smoke && '--sample-rows 1000' || '' }}"
           if [ "${{ inputs.years }}" = "all" ]; then YEARS="2021 2022 2023 2024 2025"
           else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for y in $YEARS; do
@@ -60,7 +67,7 @@ jobs:
       - name: Upload mart artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: siope-mart${{ inputs.smoke == 'true' && '-smoke' || '' }}
-          path: ${{ inputs.smoke == 'true' && 'out/smoke/data/mart/' || 'out/data/mart/' }}
+          name: siope-mart${{ inputs.smoke && '-smoke' || '' }}
+          path: ${{ inputs.smoke && 'out/smoke/data/mart/' || 'out/data/mart/' }}
           compression-level: 0
           if-no-files-found: warn
