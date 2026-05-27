@@ -76,9 +76,13 @@ smoke-comparto:
 
 .PHONY: check
 check:
-	@for f in $$(find . -name dataset.yml -not -path './.git/*' | sort); do \
+	@for f in $$(find . -path '*/anagrafica/*' -name dataset.yml | sort); do \
 		echo "→ $$f"; \
-		$(TOOLKIT) inspect paths --config "$$f" --year 2024 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) inspect paths --config "$$f" --year 2026 > /dev/null 2>&1 || exit 1; \
+	done
+	@for f in $$(find . -path '*/entrate/*' -o -path '*/uscite/*' -name dataset.yml | sort); do \
+		echo "→ $$f"; \
+		$(TOOLKIT) inspect paths --config "$$f" --year 2025 > /dev/null 2>&1 || exit 1; \
 	done
 	@echo "✅ All configs valid"
 
