@@ -60,17 +60,17 @@ mart:
     levels:
       - level: "comune_macro"
         table: "h_entrate_comune_macro"
-        grain: ["codice_ente", "denominazione_ente", "codice_provincia", "provincia", "regione", "macro_categoria_v2"]
+        grain: ["anno", "codice_ente", "denominazione_ente", "codice_provincia", "provincia", "regione", "macro_categoria_v2"]
         source_table: "siope_entrate_comuni_agg_labeled"
         exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
       - level: "provincia_macro"
         table: "h_entrate_provincia_macro"
-        grain: ["codice_provincia", "provincia", "regione", "macro_categoria_v2"]
+        grain: ["anno", "codice_provincia", "provincia", "regione", "macro_categoria_v2"]
         source_table: "siope_entrate_comuni_agg_labeled"
         exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
       - level: "regione_macro"
         table: "h_entrate_regione_macro"
-        grain: ["regione", "macro_categoria_v2"]
+        grain: ["anno", "regione", "macro_categoria_v2"]
         source_table: "siope_entrate_comuni_agg_labeled"
         exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
   required_tables: ["siope_entrate_comuni", "siope_entrate_comuni_agg", "siope_entrate_comuni_agg_labeled"]

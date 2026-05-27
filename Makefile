@@ -42,10 +42,10 @@ run-all: seeds run-entrate run-uscite
 smoke: seeds-smoke smoke-entrate smoke-uscite
 
 smoke-entrate:
-	$(TOOLKIT) run all --config entrate/comuni/dataset.yml --year 2025 --smoke || true
+	$(TOOLKIT) run all --config entrate/comuni/dataset.yml --year 2025 --smoke
 
 smoke-uscite:
-	$(TOOLKIT) run all --config uscite/comuni/dataset.yml --year 2025 --smoke || true
+	$(TOOLKIT) run all --config uscite/comuni/dataset.yml --year 2025 --smoke
 
 # --- Validazione config ---
 
