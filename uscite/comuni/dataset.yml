@@ -4,8 +4,8 @@ schema_version: 1
 dataset:
   name: "siope_uscite_comuni"
   years: [2021, 2022, 2023, 2024, 2025]
-  # V1 tecnica del lato uscite su comuni, con perimetro annuale e senza
-  # cross_year iniziale. La fonte open oggi espone anche il 2025.
+  # V1 tecnica del lato uscite su comuni. Multi-year mart su 2021-2025.
+  # La fonte open oggi espone anche il 2025.
 
 raw:
   extractor:
@@ -14,7 +14,7 @@ raw:
     - name: "siope_uscite_open"
       type: "http_file"
       args:
-        url: "https://www.siope.it/Siope/documenti/siope2/open/last/SIOPE_USCITE.{year}.zip"
+        url: "https://www.siope.it/documenti/siope2/open/last/SIOPE_USCITE.{year}.zip"
         filename: "SIOPE_USCITE.{year}.zip"
       primary: true
 
@@ -50,6 +50,7 @@ mart:
       sql: "sql/mart_comuni_agg.sql"
     - name: "siope_uscite_comuni_agg_labeled"
       sql: "sql/mart_comuni_agg_labeled.sql"
+  # hierarchy: temporaneamente disattivata (problemi di memoria su WSL)
   required_tables: ["siope_uscite_comuni", "siope_uscite_comuni_agg", "siope_uscite_comuni_agg_labeled"]
   validate:
     table_rules:
@@ -65,7 +66,7 @@ mart:
         not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "periodi_coperti", "codice_comparto"]
       siope_uscite_comuni_agg_labeled:
         min_rows: 300000
-        required_columns: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice", "has_codgest_match"]
+        required_columns: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice", "has_codgest_match", "codice_provincia", "provincia", "regione"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
         not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur"]
 
@@ -85,10 +86,10 @@ support:
   - name: "codgest_uscite"
     config: "../../anagrafica/anag-codgest-uscite/dataset.yml"
     years: [2024]
+  - name: "regprov"
+    config: "../../anagrafica/anag-reg-prov/dataset.yml"
+    years: [2024]
+  - name: "comuni"
+    config: "../../anagrafica/anag-comuni/dataset.yml"
+    years: [2024]
 
-cross_year:
-  tables:
-    - name: "siope_uscite_comuni_agg_labeled_multi_anno"
-      sql: "sql/cross/siope_uscite_comuni_agg_labeled_multi_anno.sql"
-      source_layer: "mart"
-      source_table: "siope_uscite_comuni_agg_labeled"

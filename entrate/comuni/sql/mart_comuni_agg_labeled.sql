@@ -42,6 +42,17 @@ codgest as (
     from codgest_seed
     where snapshot_year = (select max(snapshot_year) from codgest_seed)
 ),
+regprov_seed as (
+    select
+        *,
+        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
+    from read_parquet('{support.regprov.mart}', filename = true)
+),
+regprov as (
+    select * exclude (filename, snapshot_year)
+    from regprov_seed
+    where snapshot_year = (select max(snapshot_year) from regprov_seed)
+),
 comuni as (
     select
         e.codice_ente,
@@ -49,6 +60,7 @@ comuni as (
         e.codice_voce,
         a.denominazione_ente,
         a.tipo_ente,
+        a.codice_provincia,
         s.codice_sottocomparto,
         s.descrizione_sottocomparto,
         s.codice_comparto,
@@ -74,6 +86,7 @@ comuni as (
         e.codice_voce,
         a.denominazione_ente,
         a.tipo_ente,
+        a.codice_provincia,
         s.codice_sottocomparto,
         s.descrizione_sottocomparto,
         s.codice_comparto,
@@ -85,6 +98,9 @@ select
     c.codice_voce,
     c.denominazione_ente,
     c.tipo_ente,
+    c.codice_provincia,
+    r.provincia,
+    r.regione,
     c.codice_sottocomparto,
     c.descrizione_sottocomparto,
     c.codice_comparto,
@@ -114,6 +130,8 @@ select
         else false
     end as has_codgest_match
 from comuni c
+left join regprov r
+    on c.codice_provincia = r.codice_provincia
 left join codgest g
     -- Per il taglio comuni, `codice_comparto = PRO` e` il contesto corretto
     -- da usare contro `codice_gestione` nel dizionario delle entrate.

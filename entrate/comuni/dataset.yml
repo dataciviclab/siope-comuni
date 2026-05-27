@@ -15,7 +15,7 @@ raw:
     - name: "siope_entrate_open"
       type: "http_file"
       args:
-        url: "https://www.siope.it/Siope/documenti/siope2/open/last/SIOPE_ENTRATE.{year}.zip"
+        url: "https://www.siope.it/documenti/siope2/open/last/SIOPE_ENTRATE.{year}.zip"
         filename: "SIOPE_ENTRATE.{year}.zip"
       primary: true
     # `uscite` resta fuori dalla v1.
@@ -55,6 +55,24 @@ mart:
       sql: "sql/mart_comuni_agg.sql"
     - name: "siope_entrate_comuni_agg_labeled"
       sql: "sql/mart_comuni_agg_labeled.sql"
+  hierarchy:
+    axis: "territoriale"
+    levels:
+      - level: "comune_macro"
+        table: "h_entrate_comune_macro"
+        grain: ["codice_ente", "denominazione_ente", "codice_provincia", "provincia", "regione", "macro_categoria_v2"]
+        source_table: "siope_entrate_comuni_agg_labeled"
+        exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
+      - level: "provincia_macro"
+        table: "h_entrate_provincia_macro"
+        grain: ["codice_provincia", "provincia", "regione", "macro_categoria_v2"]
+        source_table: "siope_entrate_comuni_agg_labeled"
+        exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
+      - level: "regione_macro"
+        table: "h_entrate_regione_macro"
+        grain: ["regione", "macro_categoria_v2"]
+        source_table: "siope_entrate_comuni_agg_labeled"
+        exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
   required_tables: ["siope_entrate_comuni", "siope_entrate_comuni_agg", "siope_entrate_comuni_agg_labeled"]
   validate:
     table_rules:
@@ -70,7 +88,7 @@ mart:
         not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "periodi_coperti", "codice_comparto"]
       siope_entrate_comuni_agg_labeled:
         min_rows: 300000
-        required_columns: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice", "has_codgest_match", "is_titolo_9", "macro_categoria_v2"]
+        required_columns: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice", "has_codgest_match", "is_titolo_9", "macro_categoria_v2", "codice_provincia", "provincia", "regione"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
         not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "macro_categoria_v2"]
 
@@ -90,10 +108,10 @@ support:
   - name: "codgest_entrate"
     config: "../../anagrafica/anag-codgest-entrate/dataset.yml"
     years: [2024]
+  - name: "regprov"
+    config: "../../anagrafica/anag-reg-prov/dataset.yml"
+    years: [2024]
+  - name: "comuni"
+    config: "../../anagrafica/anag-comuni/dataset.yml"
+    years: [2024]
 
-cross_year:
-  tables:
-    - name: "siope_entrate_comuni_agg_labeled_multi_anno"
-      sql: "sql/cross/siope_entrate_comuni_agg_labeled_multi_anno.sql"
-      source_layer: "mart"
-      source_table: "siope_entrate_comuni_agg_labeled"

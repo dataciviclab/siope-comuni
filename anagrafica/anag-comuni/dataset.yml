@@ -2,7 +2,7 @@ root: "../../out"
 schema_version: 1
 
 dataset:
-  name: "siope_anag_codgest_entrate_seed"
+  name: "siope_anag_comuni_seed"
   years: [2024]
 
 raw:
@@ -20,24 +20,21 @@ clean:
   sql: "sql/clean.sql"
   read:
     mode: "explicit"
-    include: ["ANAG_CODGEST_ENTRATE.*.csv"]
+    include: ["ANAGRAFE_COMUNI.*.csv"]
     header: false
     delim: ","
     encoding: "utf-8"
-    strict_mode: false
     columns:
       column0: "VARCHAR"
       column1: "VARCHAR"
       column2: "VARCHAR"
-      column3: "VARCHAR"
-      column4: "VARCHAR"
   validate: {}
 
 mart:
   tables:
-    - name: "siope_anag_codgest_entrate_seed"
+    - name: "siope_anag_comuni_seed"
       sql: "sql/mart.sql"
-  required_tables: ["siope_anag_codgest_entrate_seed"]
+  required_tables: ["siope_anag_comuni_seed"]
   validate: {}
 
 validation:

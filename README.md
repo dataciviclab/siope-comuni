@@ -10,7 +10,7 @@ Il perimetro tecnico oggi e':
 - lato contabile: entrate + uscite
 - annualita': 2021-2025
 - pipeline: `RAW -> CLEAN -> MART` via `toolkit`
-- cross-year disponibile su `entrate` e `uscite`
+- entrate e uscite su `2021-2025`, con gerarchia territoriale (comune→provincia→regione)
 
 ## Struttura
 
@@ -35,15 +35,11 @@ py -m toolkit.cli.app run all --config anagrafica/anag-codgest-entrate/dataset.y
 py -m toolkit.cli.app run all --config anagrafica/anag-codgest-uscite/dataset.yml
 ```
 
-Poi eseguire i dataset principali:
+Poi eseguire i dataset principali (il multi-year è assorbito in `run all`):
 
 ```powershell
 py -m toolkit.cli.app run all --config entrate/comuni/dataset.yml
-py -m toolkit.cli.app validate all --config entrate/comuni/dataset.yml
-py -m toolkit.cli.app run cross_year --config entrate/comuni/dataset.yml
 py -m toolkit.cli.app run all --config uscite/comuni/dataset.yml
-py -m toolkit.cli.app validate all --config uscite/comuni/dataset.yml
-py -m toolkit.cli.app run cross_year --config uscite/comuni/dataset.yml
 ```
 
 ## Output attesi

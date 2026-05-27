@@ -31,6 +31,17 @@ comparti_map as (
     from comparti_seed
     where snapshot_year = (select max(snapshot_year) from comparti_seed)
 ),
+regprov_seed as (
+    select
+        *,
+        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
+    from read_parquet('{support.regprov.mart}', filename = true)
+),
+regprov as (
+    select * exclude (filename, snapshot_year)
+    from regprov_seed
+    where snapshot_year = (select max(snapshot_year) from regprov_seed)
+),
 base as (
     select
         e.codice_ente,
@@ -46,9 +57,11 @@ base as (
         c.descrizione_comparto,
         a.data_inizio as anag_data_inizio,
         a.data_fine as anag_data_fine,
-        a.codice_col6,
-        a.codice_col7,
-        a.codice_col8,
+        a.codice_istat_comune,
+        a.codice_provincia,
+        a.popolazione,
+        r.provincia,
+        r.regione,
         case
             when a.codice_ente is not null then true
             else false
@@ -66,6 +79,8 @@ base as (
         on a.tipo_ente = s.codice_sottocomparto
     left join comparti_map c
         on s.codice_comparto = c.codice_comparto
+    left join regprov r
+        on a.codice_provincia = r.codice_provincia
 )
 select
     *

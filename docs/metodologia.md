@@ -19,8 +19,8 @@ La pipeline segue il contract del `toolkit`:
 ## Regole metodologiche iniziali
 
 - il perimetro tecnico attuale e' `comuni / 2021-2025`
-- `entrate` e' il lato piu maturo, con `cross_year` e notebook gia' consolidati
-- `uscite` espone ora anche un `cross_year` labeled multi-anno, ma non ha ancora notebook dedicati
+- `entrate` e' il lato piu maturo, con multi-year mart e notebook gia' consolidati
+- `uscite` espone ora anche un multi-year mart labeled, ma non ha ancora notebook dedicati
 - il primo output pubblico storico resta invece volutamente stretto su `2023-2024`
 - il terzo campo delle entrate viene trattato come `periodo` (`01..12`), non come `codice_gestione`
 - il join contestuale del labeled usa `codice_comparto = codice_gestione` sul perimetro comuni
@@ -39,7 +39,7 @@ Il lato `entrate` espone:
 - `mart` comuni di dettaglio
 - `mart` comuni aggregato per `ente-anno-codice_voce`
 - `mart` comuni aggregato labeled con descrizioni voce
-- `cross_year` labeled multi-anno costruito sui parquet annuali del mart
+- multi-year mart labeled costruito sui parquet annuali del mart
 
 Il lato `uscite` espone:
 
@@ -47,7 +47,7 @@ Il lato `uscite` espone:
 - `mart` comuni di dettaglio
 - `mart` comuni aggregato per `ente-anno-codice_voce`
 - `mart` comuni aggregato labeled con descrizioni voce
-- `cross_year` labeled multi-anno costruito sui parquet annuali del mart
+- multi-year mart labeled costruito sui parquet annuali del mart
 
 ## Classificazione minima per letture pubbliche
 
