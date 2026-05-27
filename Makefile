@@ -43,8 +43,7 @@ comparti:
 	@echo "  REG    — Regioni e province autonome"
 	@echo "  SAN    — ASL, AO, IRCCS, Policlinici"
 	@echo "  UNI    — Universita' e dipartimenti"
-	@echo "Per eseguire un comparto: make comparto-{nome}"
-	@echo "Es: make smoke-comparto REG"
+	@echo "Si eseguono automaticamente con: make smoke-entrate / make smoke-uscite"
 
 # --- Smoke test (1000 righe, rapido) ---
 # RAW viene eseguito senza --smoke (lo ZIP troncato non si estrae),
@@ -63,15 +62,6 @@ smoke-uscite:
 	$(TOOLKIT) run clean --config uscite/dataset.yml --year 2025 --smoke
 	$(TOOLKIT) run mart --config uscite/dataset.yml --year 2025
 
-.PHONY: smoke-comparto
-smoke-comparto:
-	$(eval SIDE := $(word 1, $(MAKECMDGOALS)))
-	$(eval COMPARTO := $(word 2, $(MAKECMDGOALS)))
-	@echo "=== $(SIDE) / $(COMPARTO) (smoke) ==="
-	$(TOOLKIT) run raw --config $(SIDE)/dataset.yml --year 2025
-	$(TOOLKIT) run clean --config $(SIDE)/dataset.yml --year 2025 --smoke
-	$(TOOLKIT) run mart --config $(SIDE)/dataset.yml --year 2025
-
 # --- Validazione config ---
 
 .PHONY: check
@@ -80,7 +70,7 @@ check:
 		echo "→ $$f"; \
 		$(TOOLKIT) inspect paths --config "$$f" --year 2026 > /dev/null 2>&1 || exit 1; \
 	done
-	@for f in $$(find . -path '*/entrate/*' -o -path '*/uscite/*' -name dataset.yml | sort); do \
+	@for f in $$(find . \( -path '*/entrate/*' -o -path '*/uscite/*' \) -name dataset.yml | sort); do \
 		echo "→ $$f"; \
 		$(TOOLKIT) inspect paths --config "$$f" --year 2025 > /dev/null 2>&1 || exit 1; \
 	done
@@ -100,7 +90,4 @@ clean-runs:
 help:
 	@grep -E '^[a-zA-Z_-]+:' Makefile | sort
 
-# Hack per make smoke-comparto entrate REG
-.PHONY: entrate uscite
-entrate uscite:
-	@true
+

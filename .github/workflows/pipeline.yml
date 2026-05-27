@@ -38,30 +38,37 @@ jobs:
       - name: Run entrate
         if: inputs.sides != 'uscite'
         run: |
-          SIDES="entrate"
-          if [ "${{ inputs.years }}" = "all" ]; then
-            YEARS="2021 2022 2023 2024 2025"
-          else
-            YEARS=$(echo "${{ inputs.years }}" | tr ',' ' ')
-          fi
-          SMOKE_FLAG="${{ inputs.smoke && '--smoke' || '' }}"
+          SMOKE="${{ inputs.smoke }}"
+          if [ "${{ inputs.years }}" = "all" ]; then YEARS="2021 2022 2023 2024 2025"
+          else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for y in $YEARS; do
-            echo "=== entrate $y ==="
-            python3 -m toolkit.cli.app run all --config entrate/dataset.yml --year $y $SMOKE_FLAG
+            if [ "$SMOKE" = "true" ]; then
+              echo "=== entrate $y (smoke) ==="
+              python3 -m toolkit.cli.app run raw --config entrate/dataset.yml --year "$y"
+              python3 -m toolkit.cli.app run clean --config entrate/dataset.yml --year "$y" --smoke
+              python3 -m toolkit.cli.app run mart --config entrate/dataset.yml --year "$y"
+            else
+              echo "=== entrate $y (full) ==="
+              python3 -m toolkit.cli.app run all --config entrate/dataset.yml --year "$y"
+            fi
           done
 
       - name: Run uscite
         if: inputs.sides != 'entrate'
         run: |
-          if [ "${{ inputs.years }}" = "all" ]; then
-            YEARS="2021 2022 2023 2024 2025"
-          else
-            YEARS=$(echo "${{ inputs.years }}" | tr ',' ' ')
-          fi
-          SMOKE_FLAG="${{ inputs.smoke && '--smoke' || '' }}"
+          SMOKE="${{ inputs.smoke }}"
+          if [ "${{ inputs.years }}" = "all" ]; then YEARS="2021 2022 2023 2024 2025"
+          else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
           for y in $YEARS; do
-            echo "=== uscite $y ==="
-            python3 -m toolkit.cli.app run all --config uscite/dataset.yml --year $y $SMOKE_FLAG
+            if [ "$SMOKE" = "true" ]; then
+              echo "=== uscite $y (smoke) ==="
+              python3 -m toolkit.cli.app run raw --config uscite/dataset.yml --year "$y"
+              python3 -m toolkit.cli.app run clean --config uscite/dataset.yml --year "$y" --smoke
+              python3 -m toolkit.cli.app run mart --config uscite/dataset.yml --year "$y"
+            else
+              echo "=== uscite $y (full) ==="
+              python3 -m toolkit.cli.app run all --config uscite/dataset.yml --year "$y"
+            fi
           done
 
       - name: Upload mart artifacts

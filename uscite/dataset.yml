@@ -87,6 +87,9 @@ mart:
     - "siope_uscite_comuni"
     - "siope_uscite_comuni_agg"
     - "siope_uscite_comuni_agg_labeled"
+    - "siope_uscite_regioni_agg_labeled"
+    - "siope_uscite_sanita_agg_labeled"
+    - "siope_uscite_universita_agg_labeled"
   validate:
     table_rules:
       siope_uscite_comuni:
@@ -104,6 +107,18 @@ mart:
         required_columns: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur", "descrizione_codice", "has_codgest_match", "codice_provincia", "provincia", "regione"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
         not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur"]
+      siope_uscite_regioni_agg_labeled:
+        min_rows: 50
+        required_columns: ["codice_ente", "anno", "importo_totale_eur", "codice_comparto", "tipo_ente", "regione"]
+        primary_key: ["codice_ente", "anno", "codice_voce"]
+      siope_uscite_sanita_agg_labeled:
+        min_rows: 50
+        required_columns: ["codice_ente", "anno", "importo_totale_eur", "codice_comparto", "tipo_ente", "regione"]
+        primary_key: ["codice_ente", "anno", "codice_voce"]
+      siope_uscite_universita_agg_labeled:
+        min_rows: 20
+        required_columns: ["codice_ente", "anno", "importo_totale_eur", "codice_comparto", "tipo_ente"]
+        primary_key: ["codice_ente", "anno", "codice_voce"]
 
 validation:
   fail_on_error: true
