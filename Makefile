@@ -12,54 +12,61 @@ ANAG_SEEDS = \
 	anagrafica/anag-reg-prov \
 	anagrafica/anag-comuni
 
-.PHONY: seeds seeds-smoke
+.PHONY: seeds
 seeds:
 	@for d in $(ANAG_SEEDS); do \
 		echo "=== $$d ==="; \
 		$(TOOLKIT) run all --config $$d/dataset.yml || exit 1; \
 	done
 
-seeds-smoke:
-	@for d in $(ANAG_SEEDS); do \
-		echo "=== $$d (smoke) ==="; \
-		$(TOOLKIT) run all --config $$d/dataset.yml --smoke || exit 1; \
-	done
-
 # --- Dataset principali ---
 
 .PHONY: run-entrate run-uscite run-all
 run-entrate:
-	$(TOOLKIT) run all --config entrate/comuni/dataset.yml
+	$(TOOLKIT) run all --config entrate/dataset.yml
 
 run-uscite:
-	$(TOOLKIT) run all --config uscite/comuni/dataset.yml
+	$(TOOLKIT) run all --config uscite/dataset.yml
 
 run-all: seeds run-entrate run-uscite
 
-# --- Smoke test (1000 righe, rapido) ---
-# RAW viene eseguito senza --smoke (lo ZIP troncato non si estrae),
-# CLEAN usa --smoke (1000 righe), MART processa solo quelle.
+.PHONY: comparti
+comparti:
+	@echo "Comparti disponibili:"
+	@echo "  PRO    — Comuni, Province, Citta' metropolitane"
+	@echo "  REG    — Regioni e province autonome"
+	@echo "  SAN    — ASL, AO, IRCCS, Policlinici"
+	@echo "  UNI    — Universita' e dipartimenti"
+	@echo "Si eseguono con: make run-entrate / make run-uscite"
+
+# --- Smoke test (--sample-rows 1000, root isolato in out/smoke/) ---
 
 .PHONY: smoke smoke-entrate smoke-uscite
-smoke: seeds smoke-entrate smoke-uscite
+smoke: seeds-smoke smoke-entrate smoke-uscite
+
+seeds-smoke:
+	@for d in $(ANAG_SEEDS); do \
+		echo "=== $$d (smoke) ==="; \
+		$(TOOLKIT) run all --config $$d/dataset.yml --sample-rows 1000 || exit 1; \
+	done
 
 smoke-entrate:
-	$(TOOLKIT) run raw --config entrate/comuni/dataset.yml --year 2025
-	$(TOOLKIT) run clean --config entrate/comuni/dataset.yml --year 2025 --smoke
-	$(TOOLKIT) run mart --config entrate/comuni/dataset.yml --year 2025
+	$(TOOLKIT) run all --config entrate/dataset.yml --year 2025 --sample-rows 1000
 
 smoke-uscite:
-	$(TOOLKIT) run raw --config uscite/comuni/dataset.yml --year 2025
-	$(TOOLKIT) run clean --config uscite/comuni/dataset.yml --year 2025 --smoke
-	$(TOOLKIT) run mart --config uscite/comuni/dataset.yml --year 2025
+	$(TOOLKIT) run all --config uscite/dataset.yml --year 2025 --sample-rows 1000
 
 # --- Validazione config ---
 
 .PHONY: check
 check:
-	@for f in $$(find . -name dataset.yml -not -path './.git/*' | sort); do \
+	@for f in $$(find . -path '*/anagrafica/*' -name dataset.yml | sort); do \
 		echo "→ $$f"; \
-		$(TOOLKIT) inspect paths --config "$$f" --year 2024 > /dev/null 2>&1 || exit 1; \
+		$(TOOLKIT) inspect paths --config "$$f" --year 2026 > /dev/null 2>&1 || exit 1; \
+	done
+	@for f in $$(find . \( -path '*/entrate/*' -o -path '*/uscite/*' \) -name dataset.yml | sort); do \
+		echo "→ $$f"; \
+		$(TOOLKIT) inspect paths --config "$$f" --year 2025 > /dev/null 2>&1 || exit 1; \
 	done
 	@echo "✅ All configs valid"
 
