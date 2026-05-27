@@ -68,6 +68,10 @@ check:
 		echo "→ $$f"; \
 		$(TOOLKIT) inspect paths --config "$$f" --year 2025 > /dev/null 2>&1 || exit 1; \
 	done
+	@for f in $$(find . -path '*/cross/*' -name dataset.yml | sort); do \
+		echo "→ $$f"; \
+		$(TOOLKIT) inspect paths --config "$$f" --year 2025 > /dev/null 2>&1 || exit 1; \
+	done
 	@echo "✅ All configs valid"
 
 # --- Pulizia ---
