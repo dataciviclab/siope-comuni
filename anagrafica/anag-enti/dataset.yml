@@ -12,7 +12,7 @@ raw:
     - name: "siope_anagrafiche_zip"
       type: "http_file"
       args:
-        url: "https://www.siope.it/Siope/documenti/siope2/open/last/SIOPE_ANAGRAFICHE.zip"
+        url: "https://www.siope.it/documenti/siope2/open/last/SIOPE_ANAGRAFICHE.zip"
         filename: "SIOPE_ANAGRAFICHE.zip"
       primary: true
 

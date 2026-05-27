@@ -15,11 +15,13 @@ Effetto:
 - scelta metodologica semplice e stabile per la v1
 - da rivalutare se emergono enti con transizioni infra-annuali rilevanti
 
-## F6 - Semantica incompleta di codice_col6/codice_col7/codice_col8
+## F6 - [RISOLTO] codice_col7 = codice_provincia
 
-Nel seed `anag-enti` queste colonne restano propagate con naming prudenziale.
+Rinominato e documentato:
 
-Effetto:
+- `codice_col6` → `codice_istat_comune` (codice ISTAT 3 cifre progressivo per provincia)
+- `codice_col7` → `codice_provincia` (match 110/110 con `ANAG_REG_PROV`)
+- `codice_col8` → `popolazione` (residenti al momento dello snapshot)
 
-- non bloccano la pipeline v1
-- non vanno usate come campi interpretativi pubblici finche' la semantica non e' chiarita
+Il dato provincia e' ora disponibile nei mart tramite join con `anag-reg-prov`.
+Vedi commit `feat/align-mart-cross-year-hierarchy`.

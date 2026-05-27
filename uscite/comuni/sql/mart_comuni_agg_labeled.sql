@@ -1,46 +1,17 @@
-with anag_enti_seed as (
-    select
-        *,
-        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('{support.enti.mart}', filename = true)
-),
-anag_enti as (
-    select * exclude (filename, snapshot_year)
-    from anag_enti_seed
-    where snapshot_year = (select max(snapshot_year) from anag_enti_seed)
-),
-sottocomparti_seed as (
-    select
-        *,
-        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('{support.sottocomparti.mart}', filename = true)
+with anag_enti as (
+    select * from read_parquet('{support.enti.mart}')
 ),
 sottocomparti_map as (
-    select * exclude (filename, snapshot_year)
-    from sottocomparti_seed
-    where snapshot_year = (select max(snapshot_year) from sottocomparti_seed)
-),
-comparti_seed as (
-    select
-        *,
-        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('{support.comparti.mart}', filename = true)
+    select * from read_parquet('{support.sottocomparti.mart}')
 ),
 comparti_map as (
-    select * exclude (filename, snapshot_year)
-    from comparti_seed
-    where snapshot_year = (select max(snapshot_year) from comparti_seed)
-),
-codgest_seed as (
-    select
-        *,
-        regexp_extract(replace(filename, '\', '/'), '.*/([0-9]{4})/[^/]+$', 1)::integer as snapshot_year
-    from read_parquet('{support.codgest_uscite.mart}', filename = true)
+    select * from read_parquet('{support.comparti.mart}')
 ),
 codgest as (
-    select * exclude (filename, snapshot_year)
-    from codgest_seed
-    where snapshot_year = (select max(snapshot_year) from codgest_seed)
+    select * from read_parquet('{support.codgest_uscite.mart}')
+),
+regprov as (
+    select * from read_parquet('{support.regprov.mart}')
 ),
 comuni as (
     select
@@ -49,6 +20,7 @@ comuni as (
         e.codice_voce,
         a.denominazione_ente,
         a.tipo_ente,
+        a.codice_provincia,
         s.codice_sottocomparto,
         s.descrizione_sottocomparto,
         s.codice_comparto,
@@ -74,6 +46,7 @@ comuni as (
         e.codice_voce,
         a.denominazione_ente,
         a.tipo_ente,
+        a.codice_provincia,
         s.codice_sottocomparto,
         s.descrizione_sottocomparto,
         s.codice_comparto,
@@ -85,6 +58,9 @@ select
     c.codice_voce,
     c.denominazione_ente,
     c.tipo_ente,
+    c.codice_provincia,
+    r.provincia,
+    r.regione,
     c.codice_sottocomparto,
     c.descrizione_sottocomparto,
     c.codice_comparto,
@@ -103,6 +79,8 @@ select
         else false
     end as has_codgest_match
 from comuni c
+left join regprov r
+    on c.codice_provincia = r.codice_provincia
 left join codgest g
     on c.codice_comparto = g.codice_gestione
    and c.codice_voce = g.codice_voce

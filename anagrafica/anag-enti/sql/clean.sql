@@ -4,8 +4,8 @@ select
     try_cast(column2 as date) as data_fine,
     trim(column3) as codice_fiscale,
     trim(column4) as denominazione_ente,
-    trim(column5) as codice_col6,
-    trim(column6) as codice_col7,
-    trim(column7) as codice_col8,
+    trim(column5) as codice_istat_comune,
+    trim(column6) as codice_provincia,
+    trim(column7) as popolazione,
     trim(column8) as tipo_ente
 from raw_input;
