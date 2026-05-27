@@ -1,17 +1,16 @@
 # siope-comuni
 
-Repo progetto DataCivicLab dedicata a SIOPE, con base tecnica attuale su `comuni / 2021-2025`, lato `entrate` gia consolidato e lato `uscite` in v1 tecnica.
+Progetto DataCivicLab per i dati SIOPE — entrate e uscite degli enti pubblici italiani.
+Pipeline RAW → CLEAN → MART via toolkit DuckDB.
 
 ## Stato
 
-Il perimetro tecnico oggi e':
-
-- perimetro: comuni
-- lato contabile: entrate + uscite
-- annualita': 2021-2025
-- pipeline: `RAW -> CLEAN -> MART` via `toolkit`
-- territori: comune → provincia → regione (join con anagrafica SIOPE)
-- gerarchia: mart automatico a 3 livelli (comune, provincia, regione)
+| Perimetro | Copertura |
+|---|---|
+| **Comparti** | PRO (comuni, province, città metrop.) · REG (regioni) · SAN (ASL, AO, IRCCS) · UNI (atenei) |
+| **Annualità** | 2021-2025 |
+| **Output** | Mart annuali aggregati + gerarchia territoriale (comune → provincia → regione) |
+| **CI** | `check` su PR (validazione config) · `pipeline` dispatch (run completo, artifact .zip ~200MB) |
 
 ## Struttura
 
@@ -91,8 +90,9 @@ Il `mart` labeled espone almeno:
 
 ## Limiti noti
 
+- i mart detail mensili non sono generati di default (artifact CI più compatto)
 - per confronti descrittivi sui totali, usare come base `is_titolo_9 = false`
 - gli importi originari sono in centesimi di euro
-- il lato `entrate` e' oggi piu' maturo del lato `uscite` sul piano analitico e documentale
+- i dati siope sono aggiornati a cadenza mensile dalla fonte, il progetto va ri-eseguito periodicamente
 
 Dettagli in [docs/metodologia.md](docs/metodologia.md) e [docs/backlog_tecnico.md](docs/backlog_tecnico.md).
