@@ -64,6 +64,15 @@ jobs:
             python3 -m toolkit.cli.app run all --config uscite/dataset.yml --year "$y" $FLAG
           done
 
+      - name: Run cross-comparto
+        run: |
+          if [ "${{ inputs.years }}" = "all" ]; then YEARS="2021 2022 2023 2024 2025"
+          else YEARS=$(echo "${{ inputs.years }}" | tr ',' ' '); fi
+          for y in $YEARS; do
+            echo "=== cross $y ==="
+            python3 -m toolkit.cli.app run mart --config cross/dataset.yml --year "$y"
+          done
+
       - name: Upload mart artifacts
         uses: actions/upload-artifact@v4
         with:
