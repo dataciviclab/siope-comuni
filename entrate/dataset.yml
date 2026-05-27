@@ -1,12 +1,9 @@
-root: "../../out"
+root: "../out"
 schema_version: 1
 
 dataset:
   name: "siope_entrate_comuni"
   years: [2021, 2022, 2023, 2024, 2025]
-  # La fonte SIOPE aperta usata qui espone anche il 2025 con copertura fino al
-  # periodo 12. Il perimetro tecnico viene esteso a 2021-2025 per fissare una
-  # base multi-anno piu stabile del progetto.
 
 raw:
   extractor:
@@ -18,8 +15,7 @@ raw:
         url: "https://www.siope.it/documenti/siope2/open/last/SIOPE_ENTRATE.{year}.zip"
         filename: "SIOPE_ENTRATE.{year}.zip"
       primary: true
-    # `uscite` resta fuori dalla v1.
-    # L'anagrafica SIOPE vive in dataset separati sotto `anagrafica/`.
+    # Anagrafica SIOPE vive nei dataset separati sotto `anagrafica/`.
 
 clean:
   sql: "sql/clean.sql"
@@ -41,23 +37,32 @@ clean:
     - codice_voce
     - importo
   validate:
-    # Soglia mantenuta allineata a snapshot annuali completi: la fonte 2025
-    # oggi supera comunque questa soglia.
     min_rows: 3000000
     primary_key: ["codice_ente", "anno", "periodo", "codice_voce"]
     not_null: ["codice_ente", "anno", "periodo", "codice_voce", "importo"]
 
 mart:
   tables:
+    # --- PRO: comuni, province, città metropolitane ---
     - name: "siope_entrate_comuni"
-      sql: "sql/mart_comuni.sql"
+      sql: "sql/mart_PRO.sql"
     - name: "siope_entrate_comuni_agg"
-      sql: "sql/mart_comuni_agg.sql"
+      sql: "sql/mart_PRO_agg.sql"
     - name: "siope_entrate_comuni_agg_labeled"
-      sql: "sql/mart_comuni_agg_labeled.sql"
+      sql: "sql/mart_PRO_agg_labeled.sql"
+    # --- REG: regioni e province autonome ---
+    - name: "siope_entrate_regioni_agg_labeled"
+      sql: "sql/mart_REG_agg_labeled.sql"
+    # --- SAN: ASL, AO, IRCCS, policlinici ---
+    - name: "siope_entrate_sanita_agg_labeled"
+      sql: "sql/mart_SAN_agg_labeled.sql"
+    # --- UNI: università e dipartimenti ---
+    - name: "siope_entrate_universita_agg_labeled"
+      sql: "sql/mart_UNI_agg_labeled.sql"
   hierarchy:
     axis: "territoriale"
     levels:
+      # PRO hierarchy (comuni → provincia → regione)
       - level: "comune_macro"
         table: "h_entrate_comune_macro"
         grain: ["anno", "codice_ente", "denominazione_ente", "codice_provincia", "provincia", "regione", "macro_categoria_v2"]
@@ -73,7 +78,16 @@ mart:
         grain: ["anno", "regione", "macro_categoria_v2"]
         source_table: "siope_entrate_comuni_agg_labeled"
         exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
-  required_tables: ["siope_entrate_comuni", "siope_entrate_comuni_agg", "siope_entrate_comuni_agg_labeled"]
+      # REG hierarchy (solo regioni)
+      - level: "regione"
+        table: "h_entrate_regioni"
+        grain: ["anno", "codice_ente", "denominazione_ente", "regione"]
+        source_table: "siope_entrate_regioni_agg_labeled"
+        exclude_metrics: ["importo_totale", "righe", "periodi_coperti", "popolazione"]
+  required_tables:
+    - "siope_entrate_comuni"
+    - "siope_entrate_comuni_agg"
+    - "siope_entrate_comuni_agg_labeled"
   validate:
     table_rules:
       siope_entrate_comuni:
@@ -97,21 +111,20 @@ validation:
 
 support:
   - name: "comparti"
-    config: "../../anagrafica/anag-comparti/dataset.yml"
+    config: "../anagrafica/anag-comparti/dataset.yml"
     years: [2024]
   - name: "sottocomparti"
-    config: "../../anagrafica/anag-sottocomparti/dataset.yml"
+    config: "../anagrafica/anag-sottocomparti/dataset.yml"
     years: [2024]
   - name: "enti"
-    config: "../../anagrafica/anag-enti/dataset.yml"
+    config: "../anagrafica/anag-enti/dataset.yml"
     years: [2024]
   - name: "codgest_entrate"
-    config: "../../anagrafica/anag-codgest-entrate/dataset.yml"
+    config: "../anagrafica/anag-codgest-entrate/dataset.yml"
     years: [2024]
   - name: "regprov"
-    config: "../../anagrafica/anag-reg-prov/dataset.yml"
+    config: "../anagrafica/anag-reg-prov/dataset.yml"
     years: [2024]
   - name: "comuni"
-    config: "../../anagrafica/anag-comuni/dataset.yml"
+    config: "../anagrafica/anag-comuni/dataset.yml"
     years: [2024]
-

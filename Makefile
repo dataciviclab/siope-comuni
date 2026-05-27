@@ -29,12 +29,22 @@ seeds-smoke:
 
 .PHONY: run-entrate run-uscite run-all
 run-entrate:
-	$(TOOLKIT) run all --config entrate/comuni/dataset.yml
+	$(TOOLKIT) run all --config entrate/dataset.yml
 
 run-uscite:
-	$(TOOLKIT) run all --config uscite/comuni/dataset.yml
+	$(TOOLKIT) run all --config uscite/dataset.yml
 
 run-all: seeds run-entrate run-uscite
+
+.PHONY: comparti
+comparti:
+	@echo "Comparti disponibili:"
+	@echo "  PRO    — Comuni, Province, Citta' metropolitane"
+	@echo "  REG    — Regioni e province autonome"
+	@echo "  SAN    — ASL, AO, IRCCS, Policlinici"
+	@echo "  UNI    — Universita' e dipartimenti"
+	@echo "Per eseguire un comparto: make comparto-{nome}"
+	@echo "Es: make smoke-comparto REG"
 
 # --- Smoke test (1000 righe, rapido) ---
 # RAW viene eseguito senza --smoke (lo ZIP troncato non si estrae),
@@ -44,14 +54,23 @@ run-all: seeds run-entrate run-uscite
 smoke: seeds smoke-entrate smoke-uscite
 
 smoke-entrate:
-	$(TOOLKIT) run raw --config entrate/comuni/dataset.yml --year 2025
-	$(TOOLKIT) run clean --config entrate/comuni/dataset.yml --year 2025 --smoke
-	$(TOOLKIT) run mart --config entrate/comuni/dataset.yml --year 2025
+	$(TOOLKIT) run raw --config entrate/dataset.yml --year 2025
+	$(TOOLKIT) run clean --config entrate/dataset.yml --year 2025 --smoke
+	$(TOOLKIT) run mart --config entrate/dataset.yml --year 2025
 
 smoke-uscite:
-	$(TOOLKIT) run raw --config uscite/comuni/dataset.yml --year 2025
-	$(TOOLKIT) run clean --config uscite/comuni/dataset.yml --year 2025 --smoke
-	$(TOOLKIT) run mart --config uscite/comuni/dataset.yml --year 2025
+	$(TOOLKIT) run raw --config uscite/dataset.yml --year 2025
+	$(TOOLKIT) run clean --config uscite/dataset.yml --year 2025 --smoke
+	$(TOOLKIT) run mart --config uscite/dataset.yml --year 2025
+
+.PHONY: smoke-comparto
+smoke-comparto:
+	$(eval SIDE := $(word 1, $(MAKECMDGOALS)))
+	$(eval COMPARTO := $(word 2, $(MAKECMDGOALS)))
+	@echo "=== $(SIDE) / $(COMPARTO) (smoke) ==="
+	$(TOOLKIT) run raw --config $(SIDE)/dataset.yml --year 2025
+	$(TOOLKIT) run clean --config $(SIDE)/dataset.yml --year 2025 --smoke
+	$(TOOLKIT) run mart --config $(SIDE)/dataset.yml --year 2025
 
 # --- Validazione config ---
 
@@ -76,3 +95,8 @@ clean-runs:
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:' Makefile | sort
+
+# Hack per make smoke-comparto entrate REG
+.PHONY: entrate uscite
+entrate uscite:
+	@true

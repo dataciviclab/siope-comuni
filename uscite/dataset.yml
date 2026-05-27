@@ -1,11 +1,9 @@
-root: "../../out"
+root: "../out"
 schema_version: 1
 
 dataset:
   name: "siope_uscite_comuni"
   years: [2021, 2022, 2023, 2024, 2025]
-  # V1 tecnica del lato uscite su comuni. Multi-year mart su 2021-2025.
-  # La fonte open oggi espone anche il 2025.
 
 raw:
   extractor:
@@ -44,15 +42,26 @@ clean:
 
 mart:
   tables:
+    # --- PRO: comuni, province, città metropolitane ---
     - name: "siope_uscite_comuni"
-      sql: "sql/mart_comuni.sql"
+      sql: "sql/mart_PRO.sql"
     - name: "siope_uscite_comuni_agg"
-      sql: "sql/mart_comuni_agg.sql"
+      sql: "sql/mart_PRO_agg.sql"
     - name: "siope_uscite_comuni_agg_labeled"
-      sql: "sql/mart_comuni_agg_labeled.sql"
+      sql: "sql/mart_PRO_agg_labeled.sql"
+    # --- REG: regioni e province autonome ---
+    - name: "siope_uscite_regioni_agg_labeled"
+      sql: "sql/mart_REG_agg_labeled.sql"
+    # --- SAN: ASL, AO, IRCCS, policlinici ---
+    - name: "siope_uscite_sanita_agg_labeled"
+      sql: "sql/mart_SAN_agg_labeled.sql"
+    # --- UNI: università e dipartimenti ---
+    - name: "siope_uscite_universita_agg_labeled"
+      sql: "sql/mart_UNI_agg_labeled.sql"
   hierarchy:
     axis: "territoriale"
     levels:
+      # PRO hierarchy (comuni → provincia → regione)
       - level: "comune"
         table: "h_uscite_comune"
         grain: ["anno", "codice_ente", "denominazione_ente", "codice_provincia", "provincia", "regione"]
@@ -68,7 +77,16 @@ mart:
         grain: ["anno", "regione"]
         source_table: "siope_uscite_comuni_agg_labeled"
         exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
-  required_tables: ["siope_uscite_comuni", "siope_uscite_comuni_agg", "siope_uscite_comuni_agg_labeled"]
+      # REG hierarchy (solo regioni)
+      - level: "regione"
+        table: "h_uscite_regioni"
+        grain: ["anno", "codice_ente", "denominazione_ente", "regione"]
+        source_table: "siope_uscite_regioni_agg_labeled"
+        exclude_metrics: ["importo_totale", "righe", "periodi_coperti"]
+  required_tables:
+    - "siope_uscite_comuni"
+    - "siope_uscite_comuni_agg"
+    - "siope_uscite_comuni_agg_labeled"
   validate:
     table_rules:
       siope_uscite_comuni:
@@ -92,21 +110,20 @@ validation:
 
 support:
   - name: "comparti"
-    config: "../../anagrafica/anag-comparti/dataset.yml"
+    config: "../anagrafica/anag-comparti/dataset.yml"
     years: [2024]
   - name: "sottocomparti"
-    config: "../../anagrafica/anag-sottocomparti/dataset.yml"
+    config: "../anagrafica/anag-sottocomparti/dataset.yml"
     years: [2024]
   - name: "enti"
-    config: "../../anagrafica/anag-enti/dataset.yml"
+    config: "../anagrafica/anag-enti/dataset.yml"
     years: [2024]
   - name: "codgest_uscite"
-    config: "../../anagrafica/anag-codgest-uscite/dataset.yml"
+    config: "../anagrafica/anag-codgest-uscite/dataset.yml"
     years: [2024]
   - name: "regprov"
-    config: "../../anagrafica/anag-reg-prov/dataset.yml"
+    config: "../anagrafica/anag-reg-prov/dataset.yml"
     years: [2024]
   - name: "comuni"
-    config: "../../anagrafica/anag-comuni/dataset.yml"
+    config: "../anagrafica/anag-comuni/dataset.yml"
     years: [2024]
-
