@@ -22,7 +22,9 @@ jobs:
           python-version: "3.12"
 
       - name: Install toolkit
-        run: pip install dataciviclab-toolkit
+        run: |
+          pip install git+https://github.com/dataciviclab/lab-connectors.git
+          pip install git+https://github.com/dataciviclab/toolkit.git
 
       - name: Validate all dataset configs parse correctly
         run: |
