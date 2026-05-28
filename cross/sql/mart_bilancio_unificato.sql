@@ -5,7 +5,9 @@ with entrate_pro as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        macro_categoria_v2, is_titolo_9,
+        is_titolo_9, macro_categoria_v2,
+        null::varchar as macro_area,
+        null::varchar as macro_categoria,
         descrizione_codice,
         importo_totale_eur
     from read_parquet('{root}/data/mart/siope_entrate_comuni/*/siope_entrate_comuni_agg_labeled.parquet')
@@ -17,7 +19,9 @@ entrate_reg as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        macro_categoria_v2, is_titolo_9,
+        is_titolo_9, macro_categoria_v2,
+        null::varchar as macro_area,
+        null::varchar as macro_categoria,
         descrizione_codice,
         importo_totale_eur
     from read_parquet('{root}/data/mart/siope_entrate_comuni/*/siope_entrate_regioni_agg_labeled.parquet')
@@ -29,7 +33,9 @@ entrate_san as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        macro_categoria_v2, is_titolo_9,
+        is_titolo_9, macro_categoria_v2,
+        null::varchar as macro_area,
+        null::varchar as macro_categoria,
         descrizione_codice,
         importo_totale_eur
     from read_parquet('{root}/data/mart/siope_entrate_comuni/*/siope_entrate_sanita_agg_labeled.parquet')
@@ -41,7 +47,9 @@ entrate_uni as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        macro_categoria_v2, is_titolo_9,
+        is_titolo_9, macro_categoria_v2,
+        null::varchar as macro_area,
+        null::varchar as macro_categoria,
         descrizione_codice,
         importo_totale_eur
     from read_parquet('{root}/data/mart/siope_entrate_comuni/*/siope_entrate_universita_agg_labeled.parquet')
@@ -53,8 +61,7 @@ uscite_pro as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        is_titolo_9,
-        null::varchar as macro_categoria_v2,
+        is_titolo_9, macro_categoria_v2,
         macro_area,
         macro_categoria,
         descrizione_codice,
@@ -68,8 +75,7 @@ uscite_reg as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        is_titolo_9,
-        null::varchar as macro_categoria_v2,
+        is_titolo_9, macro_categoria_v2,
         macro_area,
         macro_categoria,
         descrizione_codice,
@@ -83,8 +89,7 @@ uscite_san as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        is_titolo_9,
-        null::varchar as macro_categoria_v2,
+        is_titolo_9, macro_categoria_v2,
         macro_area,
         macro_categoria,
         descrizione_codice,
@@ -98,8 +103,7 @@ uscite_uni as (
         anno, codice_ente, codice_voce,
         denominazione_ente, tipo_ente,
         codice_provincia, provincia, regione,
-        is_titolo_9,
-        null::varchar as macro_categoria_v2,
+        is_titolo_9, macro_categoria_v2,
         macro_area,
         macro_categoria,
         descrizione_codice,
