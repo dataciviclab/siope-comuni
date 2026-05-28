@@ -71,32 +71,9 @@ select
     c.periodo_min,
     c.periodo_max,
     c.importo_totale / 100.0 as importo_totale_eur,
-    case
-        when c.codice_voce like '9.%' then true
-        else false
-    end as is_titolo_9,
-    case
-        when c.codice_voce like '1.%' then 'Spese correnti'
-        when c.codice_voce like '2.%' then 'Spese in conto capitale'
-        when c.codice_voce like '3.%' then 'Incremento attivita'' finanziarie'
-        when c.codice_voce like '4.%' then 'Rimborso prestiti'
-        when c.codice_voce like '7.%' then 'Anticipazioni e partite di giro'
-        else 'Altre spese'
-    end as macro_area,
-    case
-        when c.codice_voce like '1.01.%' then 'Personale'
-        when c.codice_voce like '1.02.%' then 'Imposte e tasse'
-        when c.codice_voce like '1.03.%' then 'Acquisto beni e servizi'
-        when c.codice_voce like '1.04.%' then 'Trasferimenti correnti'
-        when c.codice_voce like '1.05.%' then 'Interessi passivi'
-        when c.codice_voce like '1.07.%' then 'Poste correttive'
-        when c.codice_voce like '2.01.%' then 'Investimenti fissi'
-        when c.codice_voce like '2.02.%' then 'Contributi investimenti'
-        when c.codice_voce like '2.03.%' then 'Trasferimenti c/capitale'
-        when c.codice_voce like '4.%' then 'Rimborso prestiti'
-        when c.codice_voce like '7.%' then 'Anticipazioni'
-        else 'Altre spese'
-    end as macro_categoria,
+    g.is_titolo_9,
+    g.macro_area,
+    g.macro_categoria,
     g.descrizione_codice,
     g.data_inizio as codgest_data_inizio,
     g.data_fine as codgest_data_fine,
