@@ -69,9 +69,9 @@ select
     a.periodi_coperti,
     a.periodo_min,
     a.periodo_max,
-    a.importo_totale / 100.0 as importo_totale_eur,    g.is_titolo_9,
-    g.macro_area,
-    g.macro_categoria,
+    a.importo_totale / 100.0 as importo_totale_eur,    coalesce(g.is_titolo_9, false) as is_titolo_9,
+    coalesce(g.macro_area, 'Altre spese') as macro_area,
+    coalesce(g.macro_categoria, 'Altre spese') as macro_categoria,
 
     g.descrizione_codice,
     g.data_inizio as codgest_data_inizio,
