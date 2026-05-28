@@ -93,15 +93,15 @@ mart:
         not_null: ["codice_ente", "anno", "codice_voce", "importo_totale", "importo_totale_eur"]
       siope_uscite_regioni_agg_labeled:
         min_rows: 50
-        required_columns: ["codice_ente", "anno", "importo_totale_eur", "macro_area", "codice_comparto", "tipo_ente", "regione"]
+        required_columns: ["codice_ente", "anno", "importo_totale_eur", "macro_area", "macro_categoria", "is_titolo_9", "codice_comparto", "tipo_ente", "regione"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
       siope_uscite_sanita_agg_labeled:
         min_rows: 50
-        required_columns: ["codice_ente", "anno", "importo_totale_eur", "codice_comparto", "tipo_ente", "regione"]
+        required_columns: ["codice_ente", "anno", "importo_totale_eur", "macro_area", "macro_categoria", "is_titolo_9", "codice_comparto", "tipo_ente", "regione"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
       siope_uscite_universita_agg_labeled:
         min_rows: 20
-        required_columns: ["codice_ente", "anno", "importo_totale_eur", "codice_comparto", "tipo_ente"]
+        required_columns: ["codice_ente", "anno", "importo_totale_eur", "macro_area", "macro_categoria", "is_titolo_9", "codice_comparto", "tipo_ente"]
         primary_key: ["codice_ente", "anno", "codice_voce"]
 
 validation:
