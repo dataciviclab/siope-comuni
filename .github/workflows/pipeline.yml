@@ -75,6 +75,20 @@ jobs:
             python3 -m toolkit.cli.app run mart --config cross/dataset.yml --year "$y" $FLAG
           done
 
+      - name: Auth GCP e sync a GCS
+        if: ${{ !inputs.smoke }}
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+        run: |
+          if [ -z "$GCP_SA_KEY" ]; then
+            echo "GCP_SA_KEY non configurata — salto GCS sync"
+            exit 0
+          fi
+          echo "$GCP_SA_KEY" > /tmp/gcp-key.json
+          gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+          gsutil -m rsync -r out/data/mart/ gs://dataciviclab-mart/siope/
+          echo "✅ Synced to gs://dataciviclab-mart/siope/"
+
       - name: Upload mart artifacts
         uses: actions/upload-artifact@v4
         with:
