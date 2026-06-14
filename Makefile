@@ -9,8 +9,7 @@ ANAG_SEEDS = \
 	anagrafica/anag-enti \
 	anagrafica/anag-codgest-entrate \
 	anagrafica/anag-codgest-uscite \
-	anagrafica/anag-reg-prov \
-	anagrafica/anag-comuni
+	anagrafica/anag-reg-prov
 
 .PHONY: seeds
 seeds:

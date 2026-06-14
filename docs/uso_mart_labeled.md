@@ -26,26 +26,31 @@ Questa nota spiega come leggere in modo corretto il `mart` finale del progetto:
 - per confronti su autonomia fiscale o dipendenza esterna, partire da `macro_categoria_v2`
   e poi scendere alle singole `descrizione_codice` solo nei casi che restano dubbi
 
-## Join contestuale del dizionario entrate
+## Arricchimento nel clean
 
-Il labeled usa un join contestuale tra:
+Le etichette (territorio, comparto, classificazione) vengono aggiunte nel layer
+`clean` tramite join con le anagrafiche SIOPE:
 
-- `codice_comparto` del mart
-- `codice_gestione` del dizionario entrate
+- `enti` → denominazione_ente, tipo_ente, codice_provincia
+- `sottocomparti` + `comparti` → codice_comparto, descrizione_comparto
+- `regprov` → provincia, regione
+- `codgest_entrate` → descrizione_codice, macro_categoria_v2, is_titolo_9
 
-Nel perimetro v1 dei comuni, il contesto corretto e':
+Il join contestuale del dizionario entrate usa:
 
-- `tipo_ente = COMUNE`
-- `codice_comparto = PRO`
+- `codice_comparto = codice_gestione` (dal dizionario)
+- `codice_voce` (match puntuale della voce contabile)
+- validità temporale con pivot al `31 dicembre`
 
-Questa assunzione e' valida per il perimetro attuale dei comuni e va rivalutata se il progetto si estende ad altri comparti.
+I mart ereditano le etichette dal clean e fanno sola aggregazione annuale.
 
 ## Limiti da tenere presenti
 
 - perimetro tecnico attuale: `comuni / entrate / 2021-2025`
 - il primo output pubblico storico del repo resta invece su `2023-2024`
-- i `mart` leggono sempre l'ultimo snapshot disponibile dei seed anagrafici `clean`
+- il `clean` legge sempre l'ultimo snapshot disponibile dei seed anagrafici `mart`
 - il join anagrafico usa una validita' annuale con pivot al `31 dicembre`
+- i `mart` ereditano le etichette dal `clean` e non fanno più join diretti
 - `codice_col6`, `codice_col7`, `codice_col8` non sono campi interpretativi pubblici
 - `macro_categoria_v2` e' una proxy minima: utile per follow-up pubblici, ma non
   sostituisce l'analisi puntuale di tutte le voci `2.*`, `4.*` o `7.*`

@@ -36,6 +36,18 @@ clean:
     - periodo
     - codice_voce
     - importo
+    - importo_eur
+    - denominazione_ente
+    - tipo_ente
+    - codice_provincia
+    - provincia
+    - regione
+    - codice_comparto
+    - descrizione_comparto
+    - is_titolo_9
+    - macro_categoria_v2
+    - descrizione_codice
+    - has_codgest_match
   validate:
     min_rows: 3000000
     primary_key: ["codice_ente", "anno", "periodo", "codice_voce"]
@@ -123,7 +135,4 @@ support:
     years: [2026]
   - name: "regprov"
     config: "../anagrafica/anag-reg-prov/dataset.yml"
-    years: [2026]
-  - name: "comuni"
-    config: "../anagrafica/anag-comuni/dataset.yml"
     years: [2026]
