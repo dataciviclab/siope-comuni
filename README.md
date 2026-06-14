@@ -44,7 +44,7 @@ python3 -m toolkit.cli.app run all --config uscite/dataset.yml
 
 `entrate/` produce:
 
-- `clean` canonico delle entrate
+- `clean` arricchito (19 colonne: dati mensili + territorio, comparto, classificazione)
 - `siope_entrate_comuni_agg_labeled` — aggregato con voci e territorio (provincia + regione)
 - `siope_entrate_regioni_agg_labeled` — regioni e province autonome
 - `siope_entrate_sanita_agg_labeled` — ASL, AO, IRCCS
@@ -61,7 +61,7 @@ Il `mart` labeled espone almeno:
 
 `uscite/` produce:
 
-- `clean` canonico delle uscite
+- `clean` arricchito (19 colonne: dati mensili + territorio, comparto, classificazione spesa)
 - `siope_uscite_comuni_agg_labeled` — aggregato con voci, territorio e classificazione spesa
 - `siope_uscite_regioni_agg_labeled` — regioni e province autonome
 - `siope_uscite_sanita_agg_labeled` — ASL, AO, IRCCS

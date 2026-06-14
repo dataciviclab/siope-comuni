@@ -13,8 +13,8 @@ Il progetto usa i download open di SIOPE:
 La pipeline segue il contract del `toolkit`:
 
 - `raw`: download e extraction degli archivi ZIP
-- `clean`: normalizzazione minima dei CSV SIOPE
-- `mart`: join anagrafici, filtro comuni, aggregazione e labeling minimo
+- `clean`: arricchimento con join alle anagrafiche (enti, territorio, comparto, dizionario voci)
+- `mart`: filtro per comparto e aggregazione annuale (da cui la gerarchia territoriale)
 
 ## Regole metodologiche iniziali
 
@@ -53,8 +53,8 @@ Il lato `uscite` espone:
 
 ## Classificazione minima per letture pubbliche
 
-Nel `mart` labeled esiste anche una `macro_categoria_v2` pensata per evitare due
-ambiguità emerse nei follow-up pubblici:
+Nel `clean` arricchito (e di conseguenza nei `mart` aggregati) esiste una
+`macro_categoria_v2` pensata per evitare due ambiguità emerse nei follow-up pubblici:
 
 - non confondere i `Fondi perequativi` con le `Imposte proprie`
 - non leggere i `Contributi agli investimenti` come se fossero semplici
