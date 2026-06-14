@@ -1,7 +1,6 @@
-# siope-comuni
+# SIOPE — Entrate e uscite degli enti pubblici italiani
 
-Progetto DataCivicLab per i dati SIOPE — entrate e uscite degli enti pubblici italiani.
-Pipeline RAW → CLEAN → MART via toolkit DuckDB.
+Dati SIOPE (PRO comuni/province, REG regioni, SAN ASL/IRCCS, UNI atenei) con pipeline DuckDB RAW → CLEAN → MART.
 
 ## Stato
 
