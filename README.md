@@ -61,7 +61,7 @@ Il `mart` labeled espone almeno:
 
 `uscite/` produce:
 
-- `clean` arricchito (19 colonne: dati mensili + territorio, comparto, classificazione spesa)
+- `clean` arricchito (20 colonne: dati mensili + territorio, comparto, classificazione spesa con macro_area e macro_categoria)
 - `siope_uscite_comuni_agg_labeled` — aggregato con voci, territorio e classificazione spesa
 - `siope_uscite_regioni_agg_labeled` — regioni e province autonome
 - `siope_uscite_sanita_agg_labeled` — ASL, AO, IRCCS

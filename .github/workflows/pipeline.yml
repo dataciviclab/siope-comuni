@@ -67,11 +67,12 @@ jobs:
       - name: Run cross-comparto
         if: inputs.sides == 'both'
         # Il cross usa wildcard * nei path parquet (matcha tutti gli anni),
-        # quindi un singolo run basta — il --year e' irrilevante.
+        # quindi un singolo anno basta. 
+        # NOTA: senza --year il toolkit itera su tutti gli anni configurati.
         run: |
           FLAG="${{ inputs.smoke && '--sample-rows 1000' || '' }}"
           echo "=== cross $FLAG ==="
-          python3 -m toolkit.cli.app run mart --config cross/dataset.yml $FLAG
+          python3 -m toolkit.cli.app run mart --config cross/dataset.yml --year 2025 $FLAG
 
       - name: Auth GCP e sync a GCS
         if: ${{ !inputs.smoke }}
