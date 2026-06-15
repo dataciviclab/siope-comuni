@@ -110,10 +110,11 @@ def _query_path(sql_template: str, s3_path: str, **kwargs) -> list[tuple]:
 # ── Tool implementations ─────────────────────────────────────────────────────
 
 
-def cerca_ente(query: str, limit: int = 20) -> list[dict[str, Any]]:
-    """Cerca enti per denominazione (LIKE %query%)."""
+def cerca_ente(query: str, tipo: str | None = None, limit: int = 20) -> list[dict[str, Any]]:
+    """Cerca enti per denominazione (LIKE %query%), opzionalmente filtra per tipo."""
     limit = _validate_limit(limit)
     safe = _escape_sql(query)
+    tipo_filter = f"AND tipo_ente = '{_escape_sql(tipo)}'" if tipo else ""
     rows = _query(
         f"""
         SELECT codice_ente, denominazione_ente, tipo_ente,
@@ -121,6 +122,15 @@ def cerca_ente(query: str, limit: int = 20) -> list[dict[str, Any]]:
         FROM read_parquet('{ENTI_URL}')
         WHERE data_fine = '9999-12-31'
           AND denominazione_ente ILIKE '%{safe}%'
+          {tipo_filter}
+        ORDER BY
+          CASE WHEN tipo_ente = 'COMUNE' THEN 0
+               WHEN tipo_ente = 'ASL' THEN 1
+               WHEN tipo_ente = 'REGIONE' THEN 2
+               WHEN tipo_ente = 'ATENEO' THEN 3
+               ELSE 4
+          END,
+          denominazione_ente
         LIMIT {limit}
         """
     )
@@ -251,6 +261,36 @@ def serie_storica(codice_ente: str, lato: str) -> list[dict[str, Any]]:
                 "righe": row[1],
             })
     return results
+
+
+def lookup_ente(codice_ente: str) -> dict[str, Any] | None:
+    """Cerca un ente per codice_ente esatto. Restituisce dettagli o None."""
+    safe = _escape_sql(codice_ente)
+    rows = _query(
+        f"""
+        SELECT e.codice_ente, e.denominazione_ente, e.tipo_ente,
+               e.codice_provincia, e.codice_istat_comune,
+               s.codice_comparto, s.descrizione_sottocomparto
+        FROM read_parquet('{ENTI_URL}') e
+        LEFT JOIN read_parquet('{SOTTOCOMPARTI_URL}') s
+          ON e.tipo_ente = s.codice_sottocomparto
+        WHERE e.codice_ente = '{safe}'
+          AND e.data_fine = '9999-12-31'
+        LIMIT 1
+        """
+    )
+    if not rows:
+        return None
+    r = rows[0]
+    return {
+        "codice_ente": r[0],
+        "denominazione": r[1],
+        "tipo_ente": r[2],
+        "codice_provincia": r[3],
+        "codice_istat_comune": r[4],
+        "codice_comparto": r[5],
+        "comparto_descrizione": r[6],
+    }
 
 
 def elenca_enti(
