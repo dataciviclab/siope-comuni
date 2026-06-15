@@ -60,16 +60,18 @@ I mart ereditano le etichette dal clean e fanno sola aggregazione annuale.
 
 ## Query di partenza
 
-Esempio logico per confronti descrittivi:
+Esempio logico per confronti descrittivi (da GCS pubblico):
 
 ```sql
 select
     denominazione_ente,
     anno,
     sum(importo_totale_eur) as totale_entrate_eur
-from read_parquet('out/data/mart/siope_entrate_comuni/2024/siope_entrate_comuni_agg_labeled.parquet')
+from read_parquet('https://storage.googleapis.com/dataciviclab-mart/siope/siope_entrate_comuni/2024/siope_entrate_comuni_agg_labeled.parquet')
 where is_titolo_9 = false
 group by 1, 2;
 ```
 
 La query va adattata al file/anno corretto. Il punto metodologico e' il filtro su `is_titolo_9`.
+
+Stessa logica vale per le uscite: `siope_uscite_comuni_agg_labeled` con `macro_area` e `macro_categoria` al posto di `macro_categoria_v2`.
