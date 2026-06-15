@@ -22,6 +22,24 @@ from siope_client import (
 
 SERVER = "siope"
 
+
+def _list_response(result: Any) -> dict[str, Any]:
+    """Wrappa una lista in un dict per evitare il wrapping `{"result": ...}` di FastMCP.
+
+    FastMCP con ``structured_output=True`` e return type ``list[T]`` crea
+    automaticamente un modello ``{funcName}Output(result=list[T])`` che wrappa
+    il risultato in ``{"result": [...]}``. Client come OpenCode non gestiscono
+    questo formato e falliscono con errore di validazione.
+
+    Usando ``-> dict[str, Any]`` al posto di ``-> list[dict]``, FastMCP usa
+    ``RootModel`` senza wrapping. La chiave ``"data"`` rende il risultato
+    direttamente accessibile all'agente AI.
+    """
+    if isinstance(result, dict) and ("error" in result or "code" in result):
+        return result  # pass-through error
+    return {"data": result, "count": len(result)}
+
+
 mcp = create_mcp_server(
     name=SERVER,
     instructions=(
@@ -45,8 +63,8 @@ mcp = create_mcp_server(
     ),
     structured_output=True,
 )
-def siope_cerca_ente(query: str, tipo: str | None = None, limit: int = 20) -> list[dict[str, Any]]:
-    return guard_timed(cerca_ente, "siope_cerca_ente", query, tipo, limit, logger_name=SERVER)
+def siope_cerca_ente(query: str, tipo: str | None = None, limit: int = 20) -> dict[str, Any]:
+    return _list_response(guard_timed(cerca_ente, "siope_cerca_ente", query, tipo, limit, logger_name=SERVER))
 
 
 @mcp.tool(
@@ -69,8 +87,8 @@ def siope_get_bilancio(codice_ente: str, anno: int, lato: str) -> dict[str, Any]
     ),
     structured_output=True,
 )
-def siope_spesa_categoria(codice_ente: str, anno: int, lato: str) -> list[dict[str, Any]]:
-    return guard_timed(spesa_categoria, "siope_spesa_categoria", codice_ente, anno, lato, logger_name=SERVER)
+def siope_spesa_categoria(codice_ente: str, anno: int, lato: str) -> dict[str, Any]:
+    return _list_response(guard_timed(spesa_categoria, "siope_spesa_categoria", codice_ente, anno, lato, logger_name=SERVER))
 
 
 @mcp.tool(
@@ -92,16 +110,16 @@ def siope_lookup_ente(codice_ente: str) -> dict[str, Any] | None:
     ),
     structured_output=True,
 )
-def siope_top_enti(anno: int, lato: str, comparto: str | None = None, limit: int = 10) -> list[dict[str, Any]]:
-    return guard_timed(top_enti, "siope_top_enti", anno, lato, comparto, limit, logger_name=SERVER)
+def siope_top_enti(anno: int, lato: str, comparto: str | None = None, limit: int = 10) -> dict[str, Any]:
+    return _list_response(guard_timed(top_enti, "siope_top_enti", anno, lato, comparto, limit, logger_name=SERVER))
 
 
 @mcp.tool(
     description="Serie storica 2021-2025 delle entrate o uscite di un ente. Mostra l'andamento anno per anno.",
     structured_output=True,
 )
-def siope_serie_storica(codice_ente: str, lato: str) -> list[dict[str, Any]]:
-    return guard_timed(serie_storica, "siope_serie_storica", codice_ente, lato, logger_name=SERVER)
+def siope_serie_storica(codice_ente: str, lato: str) -> dict[str, Any]:
+    return _list_response(guard_timed(serie_storica, "siope_serie_storica", codice_ente, lato, logger_name=SERVER))
 
 
 @mcp.tool(
@@ -111,8 +129,8 @@ def siope_serie_storica(codice_ente: str, lato: str) -> list[dict[str, Any]]:
     ),
     structured_output=True,
 )
-def siope_enti_comparto(comparto: str | None = None, tipo: str | None = None, limit: int = 50) -> list[dict[str, Any]]:
-    return guard_timed(elenca_enti, "siope_enti_comparto", comparto, tipo, limit, logger_name=SERVER)
+def siope_enti_comparto(comparto: str | None = None, tipo: str | None = None, limit: int = 50) -> dict[str, Any]:
+    return _list_response(guard_timed(elenca_enti, "siope_enti_comparto", comparto, tipo, limit, logger_name=SERVER))
 
 
 if __name__ == "__main__":
