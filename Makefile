@@ -83,6 +83,14 @@ clean:
 clean-runs:
 	rm -rf out/data/_runs/
 
+# --- Verify output ---
+
+.PHONY: verify
+verify:
+	@echo "Esegui i notebook di verifica:"
+	@echo "  jupyter nbconvert --execute entrate/notebooks/verify_entrate.ipynb --to notebook"
+	@echo "  jupyter nbconvert --execute uscite/notebooks/verify_uscite.ipynb --to notebook"
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:' Makefile | sort
