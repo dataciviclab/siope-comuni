@@ -19,8 +19,7 @@ La pipeline segue il contract del `toolkit`:
 ## Regole metodologiche iniziali
 
 - il perimetro tecnico attuale e' `comuni / 2021-2025`
-- `entrate` e' il lato piu maturo, con notebook gia' consolidati
-- `uscite` e' in v1 tecnica, senza ancora notebook dedicati
+- entrate e uscite hanno entrambe notebook di analisi e verifica
 - il primo output pubblico storico resta volutamente stretto su `2023-2024`
 - il terzo campo delle entrate viene trattato come `periodo` (`01..12`), non come `codice_gestione`
 - il join contestuale del labeled usa `codice_comparto = codice_gestione` sul perimetro comuni
@@ -33,23 +32,7 @@ La pipeline segue il contract del `toolkit`:
 - `importo`: centesimi di euro
 - `importo_totale_eur`: euro derivati dal totale aggregato
 
-## Output disponibili
-
-Il lato `entrate` espone:
-
-- `clean` entrate
-- `mart` comuni di dettaglio per `ente-periodo-voce`
-- `mart` comuni aggregato per `ente-anno-codice_voce`
-- `mart` comuni aggregato labeled con voce, provincia e regione
-- `hierarchy` a 3 livelli: comune × macro-categoria, provincia × macro-categoria, regione × macro-categoria
-
-Il lato `uscite` espone:
-
-- `clean` uscite
-- `mart` comuni di dettaglio per `ente-periodo-voce`
-- `mart` comuni aggregato per `ente-anno-codice_voce`
-- `mart` comuni aggregato labeled con voce, provincia e regione
-- `hierarchy` a 3 livelli: comune, provincia, regione
+Gli output prodotti sono descritti in [pipeline.md](pipeline.md).
 
 ## Classificazione minima per letture pubbliche
 

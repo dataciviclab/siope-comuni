@@ -1,90 +1,69 @@
-# SIOPE — Entrate e uscite degli enti pubblici italiani
+# open-siope — La spesa pubblica italiana, aperta e interrogabile
 
-Dati SIOPE (PRO comuni/province, REG regioni, SAN ASL/IRCCS, UNI atenei) con pipeline DuckDB RAW → CLEAN → MART.
+> **Quanto spende e quanto incassa ogni ente pubblico italiano, mese per mese.**
 
-## Stato
+open-siope nasce dai dati SIOPE (Sistema Informativo sulle Operazioni degli Enti Pubblici) della Ragioneria Generale dello Stato. Li abbiamo puliti, arricchiti, e resi pubblici.
 
-| Perimetro | Copertura |
+La discussione è qui — partecipa, chiedi, approfondisci.
+
+---
+
+## 💬 Partecipa
+
+Le discussioni sono il cuore del progetto. Trovi già i primi temi aperti:
+
+- **🏘️ [Territorio](https://github.com/dataciviclab/open-siope/discussions/categories/territorio)** — IMU, TARI, personale, manutenzione strade, refezione scolastica
+- **🏥 [Sanità](https://github.com/dataciviclab/open-siope/discussions/categories/sanit%C3%A0-san)** — ASL, ospedali, farmaceutica, spesa sanitaria
+- **🏛️ [Regioni](https://github.com/dataciviclab/open-siope/discussions/categories/regioni-reg)** — IRAP, trasporti, fondi europei
+- **🎓 [Università](https://github.com/dataciviclab/open-siope/discussions/categories/universit%C3%A0-uni)** — tasse, FFO, ricerca, edilizia
+- **🔗 [Trasversale](https://github.com/dataciviclab/open-siope/discussions/categories/trasversale)** — temi che tagliano tutti i comparti (consulenze, debito, personale)
+
+Vedi un dato curioso? Apri una discussione. Hai una domanda? Usa **Q&A**.
+
+---
+
+## 📦 I dati in breve
+
+| Cosa | Quanto |
 |---|---|
-| **Comparti** | PRO (comuni, province, città metrop.) · REG (regioni) · SAN (ASL, AO, IRCCS) · UNI (atenei) |
-| **Annualità** | 2021-2025 |
-| **Output** | Mart annuali aggregati + gerarchia territoriale (comune → provincia → regione) |
-| **CI** | `check` su PR (validazione config) · `pipeline` dispatch (run completo, artifact .zip ~200MB) |
+| **Enti coperti** | ~18.000 (comuni, ASL, università, regioni, province) |
+| **Periodo** | 2021 — 2025 |
+| **Comparti** | PRO (territorio) · REG (regioni) · SAN (sanità) · UNI (università) |
+| **Voci entrate** | ~2.000 codici (IMU, TARI, IRPEF, trasferimenti, ...) |
+| **Voci uscite** | ~2.700 codici (personale, beni, investimenti, interessi, ...) |
 
-## Struttura
+I dati puliti (CLEAN) e aggregati (MART) sono pubblici su **Google Cloud Storage**:
 
-- `entrate/`: dataset entrate (PRO comuni/province + REG + SAN + UNI)
-- `uscite/`: dataset uscite (PRO comuni/province + REG + SAN + UNI)
-- `anagrafica/anag-enti/`: seed anagrafica enti (cod. istat comune, provincia, popolazione)
-- `anagrafica/anag-codgest-entrate/`: seed dizionario voci entrate
-- `anagrafica/anag-codgest-uscite/`: seed dizionario voci uscite
-- `anagrafica/anag-comparti/`: seed comparti
-- `anagrafica/anag-sottocomparti/`: seed sottocomparti
-- `anagrafica/anag-reg-prov/`: seed regioni e province
-- `anagrafica/anag-comuni/`: seed anagrafe comuni
-- `docs/`: metodologia e backlog tecnico
-
-## Come eseguire
-
-Eseguire prima i seed anagrafici:
-
-```bash
-make seeds
+```
+gs://dataciviclab-clean/siope/...
+gs://dataciviclab-mart/siope/...
 ```
 
-Poi eseguire i dataset principali:
+Accessibili via HTTPS: `https://storage.googleapis.com/dataciviclab-clean/siope/...`
 
-```bash
-python3 -m toolkit.cli.app run all --config entrate/dataset.yml
-python3 -m toolkit.cli.app run all --config uscite/dataset.yml
-```
+---
 
-## Output attesi
+## 🧭 Come si usa
 
-`entrate/` produce:
+- **Esplora le discussioni** — ogni tema parte da una domanda aperta
+- **Chiedi una query** — nei commenti, chiedi un estratto dati specifico
+- **Scarica i parquet** — dai bucket GCS pubblici
+- **Interroga con SQL** — via DuckDB, Python, o clean-query MCP
+- **Esegui la pipeline** — vedi [docs/pipeline.md](docs/pipeline.md) per dettagli tecnici
 
-- `clean` arricchito (19 colonne: dati mensili + territorio, comparto, classificazione)
-- `siope_entrate_comuni_agg_labeled` — aggregato con voci e territorio (provincia + regione)
-- `siope_entrate_regioni_agg_labeled` — regioni e province autonome
-- `siope_entrate_sanita_agg_labeled` — ASL, AO, IRCCS
-- `siope_entrate_universita_agg_labeled` — atenei e dipartimenti
-- `h_entrate_comune_macro` — gerarchia: comune × macro_categoria
-- `h_entrate_provincia_macro` — gerarchia: provincia × macro_categoria
-- `h_entrate_regione_macro` — gerarchia: regione × macro_categoria
+---
 
-Il `mart` labeled espone almeno:
+## 📚 Documenti tecnici
 
-- `importo_totale`, `importo_totale_eur`
-- `provincia`, `regione`
-- `macro_categoria_v2`, `is_titolo_9` (entrate) / `macro_area`, `macro_categoria` (uscite)
+I dettagli su pipeline, metodologia e output vivono separati dal README per non appesantirlo:
 
-`uscite/` produce:
+- [Pipeline](docs/pipeline.md) — come eseguire, struttura, output
+- [Metodologia](docs/metodologia.md) — origini dati, classificazioni, unità di misura
+- [Backlog tecnico](docs/backlog_tecnico.md) — cose ancora da fare
+- [Uso mart](docs/uso_mart_labeled.md) — guida alle tabelle aggregate
 
-- `clean` arricchito (20 colonne: dati mensili + territorio, comparto, classificazione spesa con macro_area e macro_categoria)
-- `siope_uscite_comuni_agg_labeled` — aggregato con voci, territorio e classificazione spesa
-- `siope_uscite_regioni_agg_labeled` — regioni e province autonome
-- `siope_uscite_sanita_agg_labeled` — ASL, AO, IRCCS
-- `siope_uscite_universita_agg_labeled` — atenei e dipartimenti
-- `h_uscite_comune` — gerarchia: comune × macro_categoria
-- `h_uscite_provincia` — gerarchia: provincia × macro_area
-- `h_uscite_regione` — gerarchia: regione × macro_area
+---
 
+## 🏛️ DataCivicLab
 
-## Documenti utili
-
-- [docs/uso_mart_labeled.md](docs/uso_mart_labeled.md)
-- [docs/output_v1_entrate_comuni_2023_2024.md](docs/output_v1_entrate_comuni_2023_2024.md)
-  Documento storico del primo output pubblico stretto su `2023-2024`.
-- [entrate/notebooks/d3_entrate_comuni_2021_2025.ipynb](entrate/notebooks/d3_entrate_comuni_2021_2025.ipynb)
-  Notebook di follow-up sul perimetro `2021-2025`: segnali `2024 -> 2025` e breakdown di `Altro`.
-- [uscite/notebooks/d1_uscite_grandi_comuni_2021_2025.ipynb](uscite/notebooks/d1_uscite_grandi_comuni_2021_2025.ipynb)
-  Primo notebook sul lato `uscite`: grandi comuni, `2021 -> 2025`, spesa corrente, investimenti e flussi tecnici.
-
-## Limiti noti
-
-- i mart detail mensili non sono generati di default (artifact CI più compatto)
-- per confronti descrittivi sui totali, usare come base `is_titolo_9 = false`
-- gli importi originari sono in centesimi di euro
-- i dati siope sono aggiornati a cadenza mensile dalla fonte, il progetto va ri-eseguito periodicamente
-
-Dettagli in [docs/metodologia.md](docs/metodologia.md) e [docs/backlog_tecnico.md](docs/backlog_tecnico.md).
+open-siope è un progetto di [DataCivicLab](https://github.com/dataciviclab) — un laboratorio civico di dati aperti italiani.
