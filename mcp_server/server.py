@@ -14,6 +14,7 @@ from siope_client import (
     cerca_ente,
     elenca_enti,
     get_bilancio,
+    lookup_ente,
     serie_storica,
     spesa_categoria,
     top_enti,
@@ -28,7 +29,9 @@ mcp = create_mcp_server(
         "Permette di: cercare enti per nome, ottenere il bilancio di un ente, "
         "vedere la composizione per categoria, confrontare enti e vedere serie storiche. "
         "I dati coprono 2021-2025 e tutti i comparti (PRO comuni, REG regioni, "
-        "SAN sanità, UNI università, e altri)."
+        "SAN sanità, UNI università, e altri).\n\n"
+        "Esempi di codici ente: Roma=800000047, Milano=800000013, ASL Roma 1=006327004, "
+        "REGIONE LAZIO=006479801."
     ),
 )
 
@@ -36,24 +39,25 @@ mcp = create_mcp_server(
 @mcp.tool(
     description=(
         "Cerca enti pubblici italiani per nome o parte del nome. "
+        "Opzionalmente filtra per tipo (es. COMUNE, ASL, ATENEO, REGIONE, MINISTERI). "
+        "I COMUNE hanno priorità nei risultati. "
         "Restituisce codice, denominazione, tipo ente, provincia."
     ),
     structured_output=True,
 )
-def siope_cerca_ente(query: str, limit: int = 20) -> list[dict[str, Any]]:
-    """Cerca enti per denominazione (match parziale)."""
-    return guard_timed(cerca_ente, "siope_cerca_ente", query, limit, logger_name=SERVER)
+def siope_cerca_ente(query: str, tipo: str | None = None, limit: int = 20) -> list[dict[str, Any]]:
+    return guard_timed(cerca_ente, "siope_cerca_ente", query, tipo, limit, logger_name=SERVER)
 
 
 @mcp.tool(
     description=(
         "Totale entrate o uscite di un ente in un anno specifico. "
-        "lato='entrate' o 'uscite'. I valori sono in euro."
+        "lato='entrate' o 'uscite'. I valori sono in euro. "
+        "Esempi: Roma=800000047, Milano=800000013."
     ),
     structured_output=True,
 )
 def siope_get_bilancio(codice_ente: str, anno: int, lato: str) -> dict[str, Any]:
-    """Quanto ha speso/incassato un ente in un anno."""
     return guard_timed(get_bilancio, "siope_get_bilancio", codice_ente, anno, lato, logger_name=SERVER)
 
 
@@ -66,8 +70,18 @@ def siope_get_bilancio(codice_ente: str, anno: int, lato: str) -> dict[str, Any]
     structured_output=True,
 )
 def siope_spesa_categoria(codice_ente: str, anno: int, lato: str) -> list[dict[str, Any]]:
-    """Breakdown per categoria di un ente."""
     return guard_timed(spesa_categoria, "siope_spesa_categoria", codice_ente, anno, lato, logger_name=SERVER)
+
+
+@mcp.tool(
+    description=(
+        "Dato un codice_ente, restituisce denominazione, tipo, comparto. "
+        "Utile quando hai un codice da un altro tool o da una discussione."
+    ),
+    structured_output=True,
+)
+def siope_lookup_ente(codice_ente: str) -> dict[str, Any] | None:
+    return guard_timed(lookup_ente, "siope_lookup_ente", codice_ente, logger_name=SERVER)
 
 
 @mcp.tool(
@@ -79,7 +93,6 @@ def siope_spesa_categoria(codice_ente: str, anno: int, lato: str) -> list[dict[s
     structured_output=True,
 )
 def siope_top_enti(anno: int, lato: str, comparto: str | None = None, limit: int = 10) -> list[dict[str, Any]]:
-    """Enti con i valori più alti."""
     return guard_timed(top_enti, "siope_top_enti", anno, lato, comparto, limit, logger_name=SERVER)
 
 
@@ -88,7 +101,6 @@ def siope_top_enti(anno: int, lato: str, comparto: str | None = None, limit: int
     structured_output=True,
 )
 def siope_serie_storica(codice_ente: str, lato: str) -> list[dict[str, Any]]:
-    """Trend pluriennale per un ente."""
     return guard_timed(serie_storica, "siope_serie_storica", codice_ente, lato, logger_name=SERVER)
 
 
@@ -100,7 +112,6 @@ def siope_serie_storica(codice_ente: str, lato: str) -> list[dict[str, Any]]:
     structured_output=True,
 )
 def siope_enti_comparto(comparto: str | None = None, tipo: str | None = None, limit: int = 50) -> list[dict[str, Any]]:
-    """Enti per comparto o tipo."""
     return guard_timed(elenca_enti, "siope_enti_comparto", comparto, tipo, limit, logger_name=SERVER)
 
 
