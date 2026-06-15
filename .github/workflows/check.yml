@@ -2,19 +2,19 @@ name: check
 on:
   pull_request:
     paths:
+      - "**/*.py"
       - "**/*.yml"
       - "**/*.yaml"
       - "**/*.sql"
       - "**/Makefile"
-      - "scripts/*.py"
   push:
     branches: [main]
     paths:
+      - "**/*.py"
       - "**/*.yml"
       - "**/*.yaml"
       - "**/*.sql"
       - "**/Makefile"
-      - "scripts/*.py"
 
 jobs:
   validate-config:
@@ -25,10 +25,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install toolkit
+      - name: Install dependencies
         run: |
           pip install git+https://github.com/dataciviclab/lab-connectors.git
           pip install git+https://github.com/dataciviclab/toolkit.git
+          pip install duckdb mcp pytest pytest-timeout
 
       - name: Validate all dataset configs parse correctly
         run: |
@@ -45,3 +46,7 @@ jobs:
             python3 -m toolkit.cli.app inspect paths --config "$cfg" --year 2025 > /dev/null 2>&1
           done
           echo "✅ All configs valid"
+
+      - name: Run MCP server tests
+        run: |
+          python -m pytest mcp_server/tests/ -v --timeout=30
