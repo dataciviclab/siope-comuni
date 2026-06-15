@@ -87,9 +87,7 @@ clean-runs:
 
 .PHONY: verify
 verify:
-	@echo "Esegui i notebook di verifica:"
-	@echo "  jupyter nbconvert --execute entrate/notebooks/verify_entrate.ipynb --to notebook"
-	@echo "  jupyter nbconvert --execute uscite/notebooks/verify_uscite.ipynb --to notebook"
+	python3 scripts/verify_output.py
 
 .PHONY: help
 help:
