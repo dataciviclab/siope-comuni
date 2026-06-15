@@ -37,14 +37,7 @@ def _list_response(result: Any) -> dict[str, Any]:
     """
     if isinstance(result, dict) and ("error" in result or "code" in result):
         return result  # pass-through error
-    # Se guard_timed ha wrappato in {"result": [...]}, estraiamo la lista
-    if isinstance(result, dict) and list(result.keys()) == ["result"]:
-        items = result["result"]
-    else:
-        items = result
-    # Se items non è una lista, wrappiamo in data direttamente
-    data = items if isinstance(items, list) else [items]
-    return {"data": data, "count": len(data)}
+    return {"data": result, "count": len(result)}
 
 
 mcp = create_mcp_server(
