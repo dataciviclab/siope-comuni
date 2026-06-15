@@ -83,6 +83,12 @@ clean:
 clean-runs:
 	rm -rf out/data/_runs/
 
+# --- Verify output ---
+
+.PHONY: verify
+verify:
+	python3 scripts/verify_output.py
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:' Makefile | sort

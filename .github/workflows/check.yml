@@ -5,12 +5,16 @@ on:
       - "**/*.yml"
       - "**/*.yaml"
       - "**/*.sql"
+      - "**/Makefile"
+      - "scripts/*.py"
   push:
     branches: [main]
     paths:
       - "**/*.yml"
       - "**/*.yaml"
       - "**/*.sql"
+      - "**/Makefile"
+      - "scripts/*.py"
 
 jobs:
   validate-config:

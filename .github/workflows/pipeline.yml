@@ -74,6 +74,14 @@ jobs:
           echo "=== cross $FLAG ==="
           python3 -m toolkit.cli.app run mart --config cross/dataset.yml --year 2025 $FLAG
 
+      - name: Verify output (gate)
+        if: ${{ !inputs.smoke }}
+        env:
+          LATO: ${{ inputs.sides == 'both' && 'all' || inputs.sides }}
+          ANNO: ${{ inputs.years }}
+        run: |
+          python3 scripts/verify_output.py --lato "$LATO" --year "$ANNO" --ci
+
       - name: Auth GCP e sync a GCS
         if: ${{ !inputs.smoke }}
         env:
