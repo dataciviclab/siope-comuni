@@ -49,7 +49,8 @@ clean:
     - descrizione_codice
     - has_codgest_match
   validate:
-    # 3M per anno intero (~725K/mese); ridotto per anni in corso
+    # Gate anticorruzione: soglia bassa per non bloccare anni parziali.
+    # Il gate qualitativo vero è in verify_output.py (proporzionale per anno in corso).
     min_rows: 200000
     primary_key: ["codice_ente", "anno", "periodo", "codice_voce"]
     not_null: ["codice_ente", "anno", "periodo", "codice_voce", "importo"]

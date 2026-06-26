@@ -45,7 +45,8 @@ LATI_CONFIG = {
 }
 
 SOGLIE = {
-    "clean_min_rows":     1_000_000,
+    "clean_min_rows_full": 1_000_000,
+    "clean_min_rows_floor": 100_000,
     "join_territorio_pct": 95.0,
     "join_codgest_pct":   95.0,
     "mart_min_rows_PRO":  100_000,
@@ -63,6 +64,19 @@ def periodi_attesi(anno: int) -> int:
         return 12
     # Anno corrente: mese corrente - 1 (es. a giugno → 5 periodi, gen-mag)
     return max(oggi.month - 1, 1)
+
+
+def clean_min_rows(anno: int) -> int:
+    """Soglia righe minime per clean, proporzionale ai mesi disponibili.
+    - Anni passati: 1_000_000 (anno intero)
+    - Anno corrente: proporzionale ai mesi completi, floor 100K
+    """
+    oggi = datetime.date.today()
+    if anno < oggi.year:
+        return SOGLIE["clean_min_rows_full"]
+    mesi = periodi_attesi(anno)
+    return max(SOGLIE["clean_min_rows_floor"],
+               int(SOGLIE["clean_min_rows_full"] * mesi / 12))
 
 
 def resolve(cfg, anno):
@@ -84,8 +98,9 @@ def check_clean(con, lato, anno, cfg):
 
     righe, enti, periodi, neg, null_ente = r
     attesi = periodi_attesi(anno)
+    min_righe = clean_min_rows(anno)
     esito = "PASS"
-    if righe < SOGLIE["clean_min_rows"]:
+    if righe < min_righe:
         esito = "CRITICAL"
     if periodi != attesi:
         esito = "WARN" if anno == datetime.date.today().year else "CRITICAL"
@@ -97,6 +112,7 @@ def check_clean(con, lato, anno, cfg):
     return {"check": f"clean_{lato}_{anno}", "esito": esito,
             "dettaglio": {"righe": righe, "enti": enti, "periodi": periodi,
                           "periodi_attesi": attesi,
+                          "min_righe": min_righe,
                           "importi_neg": neg, "null_ente": null_ente}}
 
 
