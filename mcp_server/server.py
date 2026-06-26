@@ -43,7 +43,7 @@ mcp = create_mcp_server(
         "Connettore MCP per i dati SIOPE (entrate e uscite degli enti pubblici italiani). "
         "Permette di: cercare enti per nome, ottenere il bilancio di un ente, "
         "vedere la composizione per categoria, confrontare enti e vedere serie storiche. "
-        "I dati coprono 2021-2025 e tutti i comparti (PRO comuni, REG regioni, "
+        "I dati coprono 2021-2026 e tutti i comparti (PRO comuni, REG regioni, "
         "SAN sanità, UNI università, e altri).\n\n"
         "Esempi di codici ente: Roma=800000047, Milano=800000013, ASL Roma 1=006327004, "
         "REGIONE LAZIO=006479801."
@@ -112,7 +112,7 @@ def siope_top_enti(anno: int, lato: str, comparto: str | None = None, limit: int
 
 
 @mcp.tool(
-    description="Serie storica 2021-2025 delle entrate o uscite di un ente. Mostra l'andamento anno per anno.",
+    description="Serie storica 2021-2026 delle entrate o uscite di un ente. Mostra l'andamento anno per anno.",
     structured_output=True,
 )
 def siope_serie_storica(codice_ente: str, lato: str) -> dict[str, Any]:

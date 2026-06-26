@@ -17,7 +17,7 @@ from lab_connectors.mcp.cache import TtlCache
 # ── Costanti ──────────────────────────────────────────────────────────────────
 
 GCS_BASE = "https://storage.googleapis.com/dataciviclab-clean/siope"
-ANNI = {2021, 2022, 2023, 2024, 2025}
+ANNI = {2021, 2022, 2023, 2024, 2025, 2026}
 LATI = {"entrate", "uscite"}
 COMPARTI_VALIDI = {
     "PRO", "REG", "SAN", "UNI", "MON", "CDC", "AAI", "ASP", "EGP", "EPF",
