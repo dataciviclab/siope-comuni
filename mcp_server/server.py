@@ -150,9 +150,25 @@ def main() -> None:
     if transport in ("streamable-http", "sse", "http"):
         mcp.settings.host = os.environ.get("SIOPE_HOST", "0.0.0.0")
         mcp.settings.port = int(os.environ.get("SIOPE_PORT", os.environ.get("PORT", "8000")))
-        # Disabilita DNS rebinding protection: FastMCP la attiva di default
-        # per localhost, ma in Cloud Run l'Host header non matcha
-        mcp.settings.transport_security = None
+        # FastMCP attiva DNS rebinding protection di default solo per localhost.
+        # In Cloud Run l'Host header è il dominio .run.app — lo aggiungiamo agli
+        # allowed_hosts (configurabile via SIOPE_ALLOWED_HOST per altri domini).
+        from mcp.server.transport_security import TransportSecuritySettings
+        cloud_run_host = os.environ.get(
+            "SIOPE_ALLOWED_HOST",
+            "siope-mcp-217326868340.europe-west1.run.app",
+        )
+        mcp.settings.transport_security = TransportSecuritySettings(
+            allowed_hosts=[
+                cloud_run_host,
+                f"{cloud_run_host}:*",
+                "127.0.0.1:*",
+                "localhost:*",
+            ],
+            allowed_origins=[
+                f"https://{cloud_run_host}",
+            ],
+        )
         mcp.run("streamable-http")
     else:
         mcp.run()

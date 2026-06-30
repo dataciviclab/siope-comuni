@@ -5,10 +5,11 @@ RUN apt-get update -qq && apt-get install -y -qq git && rm -rf /var/lib/apt/list
 
 WORKDIR /app
 
-# lab-connectors non è su PyPI — installiamo da GitHub via git
+# lab-connectors non è su PyPI — installiamo da GitHub via git, commit pinnato
 # duckdb ha wheel precompilate, ok anche su slim
+# PIN: 773db19 (HEAD lab-connectors al 2026-06-30)
 RUN pip install --no-cache-dir \
-    "lab-connectors[mcp] @ git+https://github.com/dataciviclab/lab-connectors.git" \
+    "lab-connectors[mcp] @ git+https://github.com/dataciviclab/lab-connectors.git@773db197159d96d3652a5aa979a440f24040236e" \
     "duckdb>=1.5.3,<2" && \
     apt-get purge -y git && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 

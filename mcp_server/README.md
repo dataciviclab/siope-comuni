@@ -50,13 +50,22 @@ Nessuna installazione — solo un URL nella config MCP:
 
 Funziona da qualsiasi client MCP (Claude Desktop, OpenCode, Copilot, Cursor).
 
-```bash
-# Esempio: cerca il comune di Roma
-curl -X POST https://siope-mcp-217326868340.europe-west1.run.app/mcp \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json, text/event-stream" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/call",
-       "params":{"name":"siope_cerca_ente","arguments":{"query":"Roma","limit":3}}}'
+```python
+# Test rapido in Python
+import httpx, json
+
+url = "https://siope-mcp-217326868340.europe-west1.run.app/mcp"
+headers = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
+
+with httpx.Client() as c:
+    sid = c.post(url, json={"jsonrpc":"2.0","id":1,"method":"initialize",
+        "params":{"protocolVersion":"2024-11-05","capabilities":{},
+                  "clientInfo":{"name":"test","version":"0.1"}}},
+        headers=headers).headers.get("mcp-session-id","")
+    h2 = {**headers, "mcp-session-id": sid}
+    r = c.post(url, json={"jsonrpc":"2.0","id":2,"method":"tools/call",
+        "params":{"name":"siope_cerca_ente","arguments":{"query":"Roma","limit":2}}}, headers=h2)
+    print(r.text)
 ```
 
 ## Deploy
@@ -82,6 +91,7 @@ docker run -e SIOPE_TRANSPORT=streamable-http -p 8000:8000 siope-mcp
 | `SIOPE_TRANSPORT` | `stdio` | `streamable-http` per deploy remoto |
 | `SIOPE_HOST` | `0.0.0.0` | Host di ascolto (HTTP) |
 | `SIOPE_PORT` | `8000` | Porta (fallback a `$PORT` per Cloud Run) |
+| `SIOPE_ALLOWED_HOST` | (dominio .run.app) | Host per DNS rebinding protection |
 
 ## API
 
